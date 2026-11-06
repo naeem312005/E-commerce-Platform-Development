@@ -8,8 +8,8 @@
                     BP
                 </div>
                 <div>
-                    <span class="font-extrabold text-base tracking-tight text-white block leading-none">ShopAdmin</span>
-                    <span class="text-[10px] text-slate-400 font-medium tracking-wider uppercase block mt-1">Bangla Puzzle Ltd</span>
+                    <span class="font-extrabold text-base tracking-tight text-white block leading-none">Bangla Puzzle Store</span>
+                    <span class="text-[10px] text-slate-400 font-medium tracking-wider uppercase block mt-1">Admin Panel</span>
                 </div>
             </a>
             <!-- Mobile Close Button -->
