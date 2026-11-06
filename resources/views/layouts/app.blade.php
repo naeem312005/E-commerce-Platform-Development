@@ -41,6 +41,8 @@
 
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .toggle-track { width: 36px !important; height: 20px !important; }
+        .toggle-thumb { width: 16px !important; height: 16px !important; top: 2px !important; left: 2px !important; }
     </style>
 </head>
 <body class="h-full antialiased text-slate-800">
@@ -200,7 +202,7 @@
                         track.classList.remove('bg-slate-300');
                         track.classList.add('bg-emerald-500');
                         thumb.classList.remove('translate-x-0');
-                        thumb.classList.add('translate-x-4');
+                        thumb.classList.add('translate-x-full');
                         if (label) {
                             label.innerText = activeText;
                             label.classList.remove('text-slate-400');
@@ -209,7 +211,7 @@
                     } else {
                         track.classList.remove('bg-emerald-500');
                         track.classList.add('bg-slate-300');
-                        thumb.classList.remove('translate-x-4');
+                        thumb.classList.remove('translate-x-full');
                         thumb.classList.add('translate-x-0');
                         if (label) {
                             label.innerText = inactiveText;
