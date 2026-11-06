@@ -6,12 +6,12 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header Controls -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
         <div>
             <h2 class="text-xl font-extrabold text-slate-900">Products Inventory</h2>
             <p class="text-xs text-slate-500 mt-0.5">Manage products with images, SEO slugs, category hierarchy, and competitive pricing.</p>
         </div>
-        <a href="{{ route('admin.products.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition shadow-sm shadow-indigo-600/30">
+        <a href="{{ route('admin.products.create') }}" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 sm:py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition shadow-sm shadow-indigo-600/30 w-full sm:w-auto">
             <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             <span>Add New Product</span>
         </a>

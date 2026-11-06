@@ -6,12 +6,12 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header Controls -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
         <div>
             <h2 class="text-xl font-extrabold text-slate-900">Subcategories</h2>
             <p class="text-xs text-slate-500 mt-0.5">Manage subcategories assigned to parent categories with relational integrity.</p>
         </div>
-        <button onclick="openCreateModal()" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition shadow-sm shadow-indigo-600/30">
+        <button onclick="openCreateModal()" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 sm:py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition shadow-sm shadow-indigo-600/30 w-full sm:w-auto">
             <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             <span>Add Subcategory</span>
         </button>
@@ -120,8 +120,8 @@
 </div>
 
 <!-- Create Subcategory Modal -->
-<div id="createModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
-    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-slate-200">
+<div id="createModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+    <div class="w-full max-w-md rounded-2xl bg-white p-5 sm:p-6 shadow-2xl border border-slate-200 my-auto max-h-[92vh] overflow-y-auto">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="font-bold text-slate-900 text-base">Add New Subcategory</h3>
             <button onclick="closeCreateModal()" class="text-slate-400 hover:text-slate-600">✕</button>
@@ -169,8 +169,8 @@
 </div>
 
 <!-- Edit Subcategory Modal -->
-<div id="editModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
-    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-slate-200">
+<div id="editModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+    <div class="w-full max-w-md rounded-2xl bg-white p-5 sm:p-6 shadow-2xl border border-slate-200 my-auto max-h-[92vh] overflow-y-auto">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 class="font-bold text-slate-900 text-base">Edit Subcategory</h3>
             <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600">✕</button>

@@ -14,6 +14,9 @@
 </head>
 <body class="h-full antialiased text-slate-800">
     <div class="min-h-full flex flex-col lg:flex-row">
+        <!-- Mobile Sidebar Backdrop Overlay -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-30 hidden lg:hidden transition-opacity duration-300" aria-hidden="true"></div>
+
         <!-- Sidebar Navigation Partial -->
         @include('backend.partials.sidebar')
 

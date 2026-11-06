@@ -18,8 +18,8 @@
     </nav>
 
     <!-- Main Product Card -->
-    <div class="rounded-3xl border border-slate-200/80 bg-white p-6 md:p-10 shadow-xs">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+    <div class="rounded-3xl border border-slate-200/80 bg-white p-4 sm:p-6 md:p-10 shadow-xs">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 items-start">
             <!-- Left: High-Res Image & Interactive Gallery -->
             <div class="space-y-4">
                 <div class="relative aspect-square w-full rounded-3xl border border-slate-200/80 bg-slate-100 overflow-hidden shadow-xs">
@@ -180,14 +180,14 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-4 border-t border-slate-100">
                     @auth
-                        <a href="{{ route('admin.products.edit', $product->id) }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition shadow-sm shadow-indigo-600/30">
+                        <a href="{{ route('admin.products.edit', $product->id) }}" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition shadow-sm shadow-indigo-600/30 w-full sm:w-auto">
                             <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                             <span>Edit Product in Admin</span>
                         </a>
                     @endauth
-                    <a href="{{ route('catalog.public') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition">
+                    <a href="{{ route('catalog.public') }}" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition w-full sm:w-auto">
                         ← Back to Catalog
                     </a>
                 </div>

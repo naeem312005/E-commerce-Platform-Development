@@ -93,7 +93,7 @@
                 </div>
             @else
                 <div class="overflow-x-auto mt-2">
-                    <table class="w-full text-left text-sm">
+                    <table class="w-full min-w-[480px] text-left text-sm">
                         <thead class="text-[11px] font-bold text-slate-400 uppercase border-b border-slate-100">
                             <tr>
                                 <th class="py-3 px-2">Product</th>

@@ -18,13 +18,13 @@
         </div>
 
         <!-- Quick Filter Tabs -->
-        <div class="mt-8 pt-4 border-t border-slate-200/60 flex flex-wrap items-center gap-2">
-            <span class="text-xs font-bold text-slate-400 mr-2 uppercase tracking-wider">Browse:</span>
-            <button onclick="filterCategory('all')" id="tab_all" class="cat-tab px-4 py-1.5 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-xs transition">
+        <div class="mt-6 sm:mt-8 pt-4 border-t border-slate-200/60 flex items-center gap-2 overflow-x-auto pb-2 flex-nowrap sm:flex-wrap">
+            <span class="text-xs font-bold text-slate-400 mr-1 uppercase tracking-wider shrink-0">Browse:</span>
+            <button onclick="filterCategory('all')" id="tab_all" class="cat-tab px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-xs transition shrink-0 whitespace-nowrap">
                 All Categories
             </button>
             @foreach($categories as $cat)
-                <button onclick="filterCategory({{ $cat->id }})" id="tab_{{ $cat->id }}" class="cat-tab px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition">
+                <button onclick="filterCategory({{ $cat->id }})" id="tab_{{ $cat->id }}" class="cat-tab px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition shrink-0 whitespace-nowrap">
                     {{ $cat->name }}
                 </button>
             @endforeach
@@ -46,24 +46,24 @@
             @foreach($categories as $cat)
                 <section id="cat_section_{{ $cat->id }}" class="cat-section space-y-8">
                     <!-- Category Header -->
-                    <div class="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-slate-200 pb-3 gap-2">
                         <div class="flex items-center gap-3">
-                            <span class="size-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-600/20">
+                            <span class="size-9 sm:size-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-600/20 shrink-0">
                                 <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
                             </span>
                             <div>
-                                <h2 class="text-2xl font-black text-slate-900 tracking-tight">{{ $cat->name }}</h2>
+                                <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{{ $cat->name }}</h2>
                             </div>
                         </div>
-                        <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
+                        <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full self-start sm:self-auto">
                             {{ $cat->subcategories->count() }} Subcategories
                         </span>
                     </div>
 
                     <!-- Subcategories Under This Category -->
-                    <div class="space-y-8">
+                    <div class="space-y-6 sm:space-y-8">
                         @foreach($cat->subcategories as $sub)
-                            <div class="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-xs space-y-5">
+                            <div class="rounded-3xl border border-slate-200/80 bg-white p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-5">
                                 <!-- Subcategory Banner -->
                                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100 gap-2">
                                     <div class="flex items-center gap-2.5">

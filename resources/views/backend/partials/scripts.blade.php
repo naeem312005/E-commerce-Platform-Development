@@ -101,18 +101,56 @@
         const toggleBtn = document.getElementById('mobile-sidebar-toggle');
         const closeBtn = document.getElementById('sidebar-close-btn');
         const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebar-backdrop');
 
-        if (toggleBtn && sidebar) {
-            toggleBtn.addEventListener('click', function() {
-                sidebar.classList.toggle('-translate-x-full');
+        function openSidebar() {
+            if (sidebar) sidebar.classList.remove('-translate-x-full');
+            if (backdrop) backdrop.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden', 'lg:overflow-auto');
+        }
+
+        function closeSidebar() {
+            if (sidebar) sidebar.classList.add('-translate-x-full');
+            if (backdrop) backdrop.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden', 'lg:overflow-auto');
+        }
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (sidebar && sidebar.classList.contains('-translate-x-full')) {
+                    openSidebar();
+                } else {
+                    closeSidebar();
+                }
             });
         }
 
-        if (closeBtn && sidebar) {
-            closeBtn.addEventListener('click', function() {
-                sidebar.classList.add('-translate-x-full');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                closeSidebar();
             });
         }
+
+        if (backdrop) {
+            backdrop.addEventListener('click', function() {
+                closeSidebar();
+            });
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar && !sidebar.classList.contains('-translate-x-full')) {
+                closeSidebar();
+            }
+        });
+
+        // Auto close on window resize to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 1024 && backdrop && !backdrop.classList.contains('hidden')) {
+                closeSidebar();
+            }
+        });
     });
 </script>
 
