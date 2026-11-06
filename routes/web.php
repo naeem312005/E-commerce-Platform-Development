@@ -42,5 +42,3 @@ Route::middleware(['auth'])->group(function () {
 // Product Details with SEO-friendly slug
 Route::get('/products/{slug}', [CatalogController::class, 'show'])->name('products.show');
 Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.public');
-
-require __DIR__.'/settings.php';

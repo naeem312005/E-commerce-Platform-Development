@@ -37,3 +37,4 @@
     <!-- Dynamic View Content -->
     @yield('content')
 </main>
+

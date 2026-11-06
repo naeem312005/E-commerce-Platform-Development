@@ -2,7 +2,7 @@
 -- E-commerce Platform Database Export
 -- Candidate: Md Naimul Hasan Naeem
 -- Bangla Puzzle Limited - Mid-Level Laravel Developer Assignment
--- Generated: 2026-11-06 16:38:28
+-- Generated: 2026-11-06 16:45:21
 -- ============================================================
 
 SET FOREIGN_KEY_CHECKS = 0;
