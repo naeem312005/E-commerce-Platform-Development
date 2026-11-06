@@ -7,6 +7,7 @@ use App\Http\Requests\ProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -312,6 +313,34 @@ class ProductController extends Controller
             Log::error('Failed to delete product #'.$product->id.': '.$e->getMessage(), ['exception' => $e]);
 
             return back()->with('error', 'Failed to delete product. Please try again.');
+        }
+    }
+
+    /**
+     * Toggle active status of product.
+     */
+    public function toggleStatus(Product $product): JsonResponse|RedirectResponse
+    {
+        try {
+            $product->update(['is_active' => ! $product->is_active]);
+
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'is_active' => $product->is_active,
+                    'message' => 'Product status updated to '.($product->is_active ? 'Published' : 'Draft'),
+                ]);
+            }
+
+            return back()->with('success', 'Product status updated successfully!');
+        } catch (Throwable $e) {
+            Log::error('Failed to toggle product #'.$product->id.' status: '.$e->getMessage(), ['exception' => $e]);
+
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Failed to update status.'], 500);
+            }
+
+            return back()->with('error', 'Failed to update product status.');
         }
     }
 }

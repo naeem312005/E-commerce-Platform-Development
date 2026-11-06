@@ -2,7 +2,7 @@
 -- E-commerce Platform Database Export
 -- Candidate: Md Naimul Hasan Naeem
 -- Bangla Puzzle Limited - Mid-Level Laravel Developer Assignment
--- Generated: 2026-11-06 15:34:37
+-- Generated: 2026-11-06 15:58:15
 -- ============================================================
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -31,7 +31,7 @@ CREATE TABLE `users` (
 
 -- Dumping data for table `users`
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`) VALUES ('1', 'Naimul Hasan', 'naimulhasan312005@gmail.com', '2026-11-06 13:12:24', '$2y$12$Sj.QOJOo7VcFFvjW5xCuX.GNUKrq1HwW9UhG31Hx1/DNr8qs5Mp/S', NULL, NULL, NULL, NULL, '2026-11-06 13:11:32', '2026-11-06 13:12:24');
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`) VALUES ('2', 'Md Naimul Hasan Naeem', 'admin@banglapuzzle.com', '2026-11-06 13:12:23', '$2y$12$3W6IQmO0x9s9kqU.WXXy2uy3kWMJuixjib5KZQvBcgAJB/8BevglO', NULL, NULL, NULL, '4h8EMM4uPefZnIvuXSps8YGLwvynImTDFyqYi0yjXyKBYaEamHkrmdpjRZsY', '2026-11-06 13:12:23', '2026-11-06 13:12:23');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`) VALUES ('2', 'Md Naimul Hasan Naeem', 'admin@banglapuzzle.com', '2026-11-06 13:12:23', '$2y$12$3W6IQmO0x9s9kqU.WXXy2uy3kWMJuixjib5KZQvBcgAJB/8BevglO', NULL, NULL, NULL, 'Pye2VErKmPsIIiHnL5Nam67r5kWqer5DBoxKT1hU8k6mRuNSZLC7GzUegxWa', '2026-11-06 13:12:23', '2026-11-06 13:12:23');
 
 -- ------------------------------------------------------------
 -- Table structure for `categories`
@@ -50,7 +50,7 @@ CREATE TABLE `categories` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table `categories`
-INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `is_active`, `created_at`, `updated_at`) VALUES ('1', 'Smartphones & Gadgets', 'smartphones-gadgets', 'Flagship smartphones, smart wearables, and mobile lifestyle accessories.', '1', '2026-11-06 13:12:24', '2026-11-06 13:12:24');
+INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `is_active`, `created_at`, `updated_at`) VALUES ('1', 'Smartphones & Gadgets', 'smartphones-gadgets', 'Flagship smartphones, smart wearables, and mobile lifestyle accessories.', '0', '2026-11-06 13:12:24', '2026-11-06 15:55:51');
 INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `is_active`, `created_at`, `updated_at`) VALUES ('2', 'Computers & Accessories', 'computers-accessories', 'High performance laptops, mechanical typing experiences, and gaming peripherals.', '1', '2026-11-06 13:12:24', '2026-11-06 13:12:24');
 INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `is_active`, `created_at`, `updated_at`) VALUES ('3', 'Audio & Entertainment', 'audio-entertainment', 'Audiophile headphones, noise-canceling wireless earbuds, and spatial sound.', '1', '2026-11-06 13:12:24', '2026-11-06 13:12:24');
 
@@ -173,12 +173,12 @@ CREATE TABLE `product_variants` (
 ) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table `product_variants`
-INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('85', '1', 'Color', 'Natural Titanium', 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&auto=format&fit=crop&q=80', 'PRD-GVQDHK-NATURAL-TITANIUM', NULL, '5', '1', '2026-11-06 15:34:36', '2026-11-06 15:34:36');
-INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('86', '1', 'Color', 'Blue Titanium', 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=800&auto=format&fit=crop&q=80', 'PRD-GVQDHK-BLUE-TITANIUM', NULL, '6', '1', '2026-11-06 15:34:36', '2026-11-06 15:34:36');
-INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('87', '1', 'Color', 'Black Titanium', 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=800&auto=format&fit=crop&q=80', 'PRD-GVQDHK-BLACK-TITANIUM', NULL, '4', '1', '2026-11-06 15:34:36', '2026-11-06 15:34:36');
-INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('88', '1', 'Storage', '256 GB', NULL, 'PRD-GVQDHK-256-GB', '159999.00', '8', '1', '2026-11-06 15:34:36', '2026-11-06 15:34:36');
-INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('89', '1', 'Storage', '512 GB', NULL, 'PRD-GVQDHK-512-GB', '178500.00', '5', '1', '2026-11-06 15:34:36', '2026-11-06 15:34:36');
-INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('90', '1', 'Storage', '1 TB', NULL, 'PRD-GVQDHK-1-TB', '199000.00', '2', '1', '2026-11-06 15:34:36', '2026-11-06 15:34:36');
+INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('85', '1', 'Color', 'Natural Titanium', 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&auto=format&fit=crop&q=80', NULL, NULL, '5', '0', '2026-11-06 15:34:36', '2026-11-06 15:51:55');
+INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('86', '1', 'Color', 'Blue Titanium', 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=800&auto=format&fit=crop&q=80', NULL, NULL, '6', '0', '2026-11-06 15:34:36', '2026-11-06 15:51:55');
+INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('87', '1', 'Color', 'Black Titanium', 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=800&auto=format&fit=crop&q=80', NULL, NULL, '5', '0', '2026-11-06 15:34:36', '2026-11-06 15:51:55');
+INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('88', '1', 'Storage', '256 GB', NULL, NULL, '159999.00', '8', '0', '2026-11-06 15:34:36', '2026-11-06 15:51:55');
+INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('89', '1', 'Storage', '512 GB', NULL, NULL, '178500.00', '5', '0', '2026-11-06 15:34:36', '2026-11-06 15:51:55');
+INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('90', '1', 'Storage', '1 TB', NULL, NULL, '199000.00', '2', '0', '2026-11-06 15:34:36', '2026-11-06 15:51:55');
 INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('91', '2', 'Color', 'Titanium Gray', 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800&auto=format&fit=crop&q=80', 'PRD-UKWXS6-TITANIUM-GRAY', NULL, '4', '1', '2026-11-06 15:34:36', '2026-11-06 15:34:36');
 INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('92', '2', 'Color', 'Titanium Violet', 'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=800&auto=format&fit=crop&q=80', 'PRD-UKWXS6-TITANIUM-VIOLET', NULL, '4', '1', '2026-11-06 15:34:36', '2026-11-06 15:34:36');
 INSERT INTO `product_variants` (`id`, `product_id`, `attribute_name`, `attribute_value`, `image`, `sku`, `price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('93', '2', 'Storage', '256 GB', NULL, 'PRD-UKWXS6-256-GB', '148500.00', '5', '1', '2026-11-06 15:34:36', '2026-11-06 15:34:36');

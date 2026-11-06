@@ -177,6 +177,58 @@
         </div>
     </div>
 
+    <script>
+        async function toggleStatus(url, buttonElement, activeText = 'Active', inactiveText = 'Inactive') {
+            buttonElement.disabled = true;
+            const track = buttonElement.querySelector('.toggle-track');
+            const thumb = buttonElement.querySelector('.toggle-thumb');
+            const label = buttonElement.querySelector('.toggle-label');
+
+            try {
+                const response = await fetch(url, {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    if (data.is_active) {
+                        track.classList.remove('bg-slate-300');
+                        track.classList.add('bg-emerald-500');
+                        thumb.classList.remove('translate-x-0');
+                        thumb.classList.add('translate-x-4');
+                        if (label) {
+                            label.innerText = activeText;
+                            label.classList.remove('text-slate-400');
+                            label.classList.add('text-emerald-700');
+                        }
+                    } else {
+                        track.classList.remove('bg-emerald-500');
+                        track.classList.add('bg-slate-300');
+                        thumb.classList.remove('translate-x-4');
+                        thumb.classList.add('translate-x-0');
+                        if (label) {
+                            label.innerText = inactiveText;
+                            label.classList.remove('text-emerald-700');
+                            label.classList.add('text-slate-400');
+                        }
+                    }
+                } else {
+                    alert(data.message || 'Failed to update status.');
+                }
+            } catch (error) {
+                console.error('Toggle error:', error);
+                alert('An error occurred while updating status.');
+            } finally {
+                buttonElement.disabled = false;
+            }
+        }
+    </script>
+
     @stack('scripts')
 </body>
 </html>

@@ -176,15 +176,19 @@
                                     @endif
                                 </td>
                                 <td class="py-3.5 px-4">
-                                    @if($prod->is_active)
-                                        <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
-                                            <span class="size-1.5 rounded-full bg-emerald-500"></span> Published
+                                    <button
+                                        type="button"
+                                        onclick="toggleStatus('{{ route('admin.products.toggle-status', $prod->id) }}', this, 'Active', 'Inactive')"
+                                        class="group inline-flex items-center gap-2 cursor-pointer focus:outline-none"
+                                        title="Click to toggle status"
+                                    >
+                                        <span class="toggle-track relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out {{ $prod->is_active ? 'bg-emerald-500' : 'bg-slate-300' }}">
+                                            <span class="toggle-thumb pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out {{ $prod->is_active ? 'translate-x-4' : 'translate-x-0' }}"></span>
                                         </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full">
-                                            <span class="size-1.5 rounded-full bg-slate-400"></span> Draft
+                                        <span class="toggle-label text-xs font-semibold {{ $prod->is_active ? 'text-emerald-700' : 'text-slate-400' }}">
+                                            {{ $prod->is_active ? 'Active' : 'Inactive' }}
                                         </span>
-                                    @endif
+                                    </button>
                                 </td>
                                 <td class="py-3.5 px-4 text-right">
                                     <div class="inline-flex items-center gap-2">
@@ -257,4 +261,3 @@
 </script>
 @endpush
 @endsection
-

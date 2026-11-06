@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcategoryController;
 use Illuminate\Support\Facades\Route;
 
-// Home route displays the Product Catalog Showcase (Requirement 4)
+// Home route displays the Product Catalog Showcase
 Route::get('/', [CatalogController::class, 'index'])->name('home');
 
 // Authenticated Management Routes
@@ -17,15 +17,18 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         // Category Management
         Route::resource('categories', CategoryController::class)->except(['create', 'show', 'edit']);
+        Route::patch('categories/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('categories.toggle-status');
 
         // Subcategory Management
         Route::resource('subcategories', SubcategoryController::class)->except(['create', 'show', 'edit']);
+        Route::patch('subcategories/{subcategory}/toggle-status', [SubcategoryController::class, 'toggleStatus'])->name('subcategories.toggle-status');
         Route::get('subcategories/by-category/{category}', [SubcategoryController::class, 'byCategory'])->name('subcategories.by-category');
 
         // Product Management
         Route::resource('products', ProductController::class);
+        Route::patch('products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
 
-        // Product Catalog Showcase (Requirement 4: Organized by subcategories)
+        // Product Catalog Showcase
         Route::get('catalog', [CatalogController::class, 'index'])->name('catalog');
     });
 });

@@ -69,15 +69,19 @@
                                     </span>
                                 </td>
                                 <td class="py-3.5 px-4">
-                                    @if($cat->is_active)
-                                        <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
-                                            <span class="size-1.5 rounded-full bg-emerald-500"></span> Active
+                                    <button
+                                        type="button"
+                                        onclick="toggleStatus('{{ route('admin.categories.toggle-status', $cat->id) }}', this)"
+                                        class="group inline-flex items-center gap-2 cursor-pointer focus:outline-none"
+                                        title="Click to toggle status"
+                                    >
+                                        <span class="toggle-track relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out {{ $cat->is_active ? 'bg-emerald-500' : 'bg-slate-300' }}">
+                                            <span class="toggle-thumb pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out {{ $cat->is_active ? 'translate-x-4' : 'translate-x-0' }}"></span>
                                         </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
-                                            <span class="size-1.5 rounded-full bg-slate-400"></span> Inactive
+                                        <span class="toggle-label text-xs font-semibold {{ $cat->is_active ? 'text-emerald-700' : 'text-slate-400' }}">
+                                            {{ $cat->is_active ? 'Active' : 'Inactive' }}
                                         </span>
-                                    @endif
+                                    </button>
                                 </td>
                                 <td class="py-3.5 px-4 text-right">
                                     <div class="inline-flex items-center gap-2">
@@ -135,9 +139,15 @@
                 <textarea name="description" rows="3" placeholder="Category overview..." class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs text-slate-800 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 outline-none resize-none"></textarea>
             </div>
 
-            <div class="flex items-center gap-2">
-                <input type="checkbox" id="create_active" name="is_active" value="1" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 size-4">
-                <label for="create_active" class="text-xs font-medium text-slate-700 cursor-pointer">Active (Visible across subcategories)</label>
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div>
+                    <label for="create_active" class="text-xs font-bold text-slate-800 block cursor-pointer">Active Status</label>
+                    <span class="text-[10px] text-slate-400">Available across subcategories</span>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="create_active" name="is_active" value="1" checked class="sr-only peer">
+                    <div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                </label>
             </div>
 
             <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
@@ -169,9 +179,15 @@
                 <textarea id="edit_description" name="description" rows="3" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs text-slate-800 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 outline-none resize-none"></textarea>
             </div>
 
-            <div class="flex items-center gap-2">
-                <input type="checkbox" id="edit_active" name="is_active" value="1" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 size-4">
-                <label for="edit_active" class="text-xs font-medium text-slate-700 cursor-pointer">Active</label>
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div>
+                    <label for="edit_active" class="text-xs font-bold text-slate-800 block cursor-pointer">Active Status</label>
+                    <span class="text-[10px] text-slate-400">Enable or disable across store</span>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="edit_active" name="is_active" value="1" class="sr-only peer">
+                    <div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                </label>
             </div>
 
             <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
@@ -242,4 +258,3 @@
 </script>
 @endpush
 @endsection
-

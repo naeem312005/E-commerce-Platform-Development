@@ -323,10 +323,14 @@
             </div>
 
             <!-- 7. Active Status Toggle -->
-            <div class="flex items-center gap-2 pt-2">
-                <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $product->is_active) ? 'checked' : '' }} class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 size-4">
-                <label for="is_active" class="text-xs font-bold text-slate-700 cursor-pointer">
-                    Active & Published in Storefront
+            <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div>
+                    <label for="is_active" class="text-xs font-bold text-slate-800 block cursor-pointer">Active Status</label>
+                    <span class="text-[11px] text-slate-400">Keep product published and visible in storefront</span>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $product->is_active) ? 'checked' : '' }} class="sr-only peer">
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                 </label>
             </div>
 

@@ -128,4 +128,32 @@ class SubcategoryController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Toggle active status of subcategory.
+     */
+    public function toggleStatus(Subcategory $subcategory): JsonResponse|RedirectResponse
+    {
+        try {
+            $subcategory->update(['is_active' => ! $subcategory->is_active]);
+
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'is_active' => $subcategory->is_active,
+                    'message' => 'Subcategory status updated to '.($subcategory->is_active ? 'Active' : 'Inactive'),
+                ]);
+            }
+
+            return back()->with('success', 'Subcategory status updated successfully!');
+        } catch (Throwable $e) {
+            Log::error('Failed to toggle subcategory #'.$subcategory->id.' status: '.$e->getMessage(), ['exception' => $e]);
+
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Failed to update status.'], 500);
+            }
+
+            return back()->with('error', 'Failed to update subcategory status.');
+        }
+    }
 }

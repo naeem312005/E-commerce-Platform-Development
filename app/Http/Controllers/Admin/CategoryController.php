@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -99,6 +100,34 @@ class CategoryController extends Controller
             Log::error('Failed to delete category #'.$category->id.': '.$e->getMessage(), ['exception' => $e]);
 
             return back()->with('error', 'Failed to delete category. Ensure there are no dependent records blocking this action.');
+        }
+    }
+
+    /**
+     * Toggle active status of category.
+     */
+    public function toggleStatus(Category $category): JsonResponse|RedirectResponse
+    {
+        try {
+            $category->update(['is_active' => ! $category->is_active]);
+
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'is_active' => $category->is_active,
+                    'message' => 'Category status updated to '.($category->is_active ? 'Active' : 'Inactive'),
+                ]);
+            }
+
+            return back()->with('success', 'Category status updated successfully!');
+        } catch (Throwable $e) {
+            Log::error('Failed to toggle category #'.$category->id.' status: '.$e->getMessage(), ['exception' => $e]);
+
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Failed to update category status.'], 500);
+            }
+
+            return back()->with('error', 'Failed to update category status.');
         }
     }
 }
