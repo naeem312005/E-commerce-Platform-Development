@@ -104,6 +104,7 @@
                             <th class="py-3 px-4">Product</th>
                             <th class="py-3 px-4">Category & Subcategory</th>
                             <th class="py-3 px-4">Price (৳)</th>
+                            <th class="py-3 px-4">Stock Status</th>
                             <th class="py-3 px-4">Status</th>
                             <th class="py-3 px-4 text-right">Actions</th>
                         </tr>
@@ -113,12 +114,23 @@
                             <tr class="hover:bg-slate-50/70 transition">
                                 <td class="py-3.5 px-4">
                                     <div class="flex items-center gap-3">
-                                        <img src="{{ $prod->image_url }}" alt="{{ $prod->name }}" class="size-12 rounded-xl object-cover bg-slate-100 border border-slate-200 shrink-0">
+                                        <div class="relative shrink-0">
+                                            <img src="{{ $prod->image_url }}" alt="{{ $prod->name }}" class="size-12 rounded-xl object-cover bg-slate-100 border border-slate-200">
+                                            @if($prod->images->count() > 0)
+                                                <span class="absolute -bottom-1 -right-1 bg-indigo-600 text-white text-[9px] font-bold px-1 rounded-full shadow-xs" title="{{ $prod->images->count() }} gallery images">
+                                                    +{{ $prod->images->count() }}
+                                                </span>
+                                            @endif
+                                        </div>
                                         <div class="min-w-0">
                                             <span class="font-bold text-slate-900 text-xs block truncate max-w-xs">{{ $prod->name }}</span>
-                                            <div class="flex items-center gap-2 mt-0.5">
+                                            <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
                                                 <span class="font-mono text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">{{ $prod->sku }}</span>
-                                                <code class="font-mono text-[10px] text-slate-400">/{{ $prod->slug }}</code>
+                                                @if($prod->variants->count() > 0)
+                                                    <span class="text-[10px] bg-purple-50 text-purple-700 font-semibold px-1.5 py-0.5 rounded">
+                                                        {{ $prod->variants->count() }} variants
+                                                    </span>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -146,6 +158,21 @@
                                                 -{{ $prod->discount_percentage }}% OFF
                                             </span>
                                         </div>
+                                    @endif
+                                </td>
+                                <td class="py-3.5 px-4">
+                                    @if($prod->stock_status === 'out_of_stock')
+                                        <span class="inline-flex items-center gap-1 text-[11px] font-bold text-red-700 bg-red-50 px-2.5 py-0.5 rounded-full">
+                                            <span class="size-1.5 rounded-full bg-red-500"></span> Out of Stock (0)
+                                        </span>
+                                    @elseif($prod->stock_status === 'low_stock')
+                                        <span class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full">
+                                            <span class="size-1.5 rounded-full bg-amber-500 animate-pulse"></span> Low Stock ({{ $prod->stock_quantity }})
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
+                                            <span class="size-1.5 rounded-full bg-emerald-500"></span> In Stock ({{ $prod->stock_quantity }})
+                                        </span>
                                     @endif
                                 </td>
                                 <td class="py-3.5 px-4">

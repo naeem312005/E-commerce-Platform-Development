@@ -35,6 +35,8 @@ class ExportDatabaseCommand extends Command
             'categories',
             'subcategories',
             'products',
+            'product_images',
+            'product_variants',
             'migrations',
         ];
 

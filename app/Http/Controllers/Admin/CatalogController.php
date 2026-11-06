@@ -38,7 +38,7 @@ class CatalogController extends Controller
     public function show(string $slug): View
     {
         $product = Product::where('slug', $slug)
-            ->with(['category:id,name,slug', 'subcategory:id,name,slug'])
+            ->with(['category:id,name,slug', 'subcategory:id,name,slug', 'images', 'activeVariants'])
             ->firstOrFail();
 
         $relatedProducts = Product::where('subcategory_id', $product->subcategory_id)

@@ -20,10 +20,10 @@
     <!-- Main Product Card -->
     <div class="rounded-3xl border border-slate-200/80 bg-white p-6 md:p-10 shadow-xs">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
-            <!-- Left: High-Res Image -->
+            <!-- Left: High-Res Image & Interactive Gallery -->
             <div class="space-y-4">
                 <div class="relative aspect-square w-full rounded-3xl border border-slate-200/80 bg-slate-100 overflow-hidden shadow-xs">
-                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="size-full object-cover">
+                    <img id="mainProductImage" src="{{ $product->image_url }}" alt="{{ $product->name }}" class="size-full object-cover transition duration-300">
 
                     @if($product->discount_percentage > 0)
                         <div class="absolute top-4 left-4 rounded-full bg-red-600 px-3.5 py-1 text-xs font-black text-white shadow-md">
@@ -36,11 +36,38 @@
                     </div>
                 </div>
 
+                <!-- Gallery Thumbnails Strip -->
+                @if($product->images->count() > 0)
+                    <div class="space-y-1.5">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">More Photos (Click to Preview):</span>
+                        <div class="flex items-center gap-2.5 overflow-x-auto pb-2 pt-0.5">
+                            <!-- Main Image Thumb -->
+                            <button
+                                type="button"
+                                onclick="switchMainImage('{{ $product->image_url }}', this)"
+                                class="gallery-thumb size-16 rounded-2xl border-2 border-indigo-600 bg-white overflow-hidden shrink-0 shadow-xs transition"
+                            >
+                                <img src="{{ $product->image_url }}" alt="Cover" class="size-full object-cover">
+                            </button>
+
+                            <!-- Gallery Images -->
+                            @foreach($product->images as $galleryImg)
+                                <button
+                                    type="button"
+                                    onclick="switchMainImage('{{ $galleryImg->image_url }}', this)"
+                                    class="gallery-thumb size-16 rounded-2xl border-2 border-slate-200 hover:border-slate-400 bg-white overflow-hidden shrink-0 shadow-xs transition opacity-70 hover:opacity-100"
+                                >
+                                    <img src="{{ $galleryImg->image_url }}" alt="Gallery Angle" class="size-full object-cover">
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Right: Details & Pricing -->
             <div class="space-y-6">
-                <!-- Badges -->
+                <!-- Badges (Category + Subcategory + Stock Status) -->
                 <div class="flex flex-wrap items-center gap-2">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold">
                         {{ $product->category->name ?? 'Unassigned' }}
@@ -48,14 +75,24 @@
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-bold">
                         {{ $product->subcategory->name ?? 'Unassigned' }}
                     </span>
-                    @if($product->is_active)
-                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
-                            <span class="size-1.5 rounded-full bg-emerald-500"></span> In Stock
+
+                    <!-- Stock Status Badge -->
+                    @if($product->stock_status === 'out_of_stock')
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-800 text-xs font-bold">
+                            <span class="size-1.5 rounded-full bg-red-600"></span> Out of Stock
+                        </span>
+                    @elseif($product->stock_status === 'low_stock')
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">
+                            <span class="size-1.5 rounded-full bg-amber-600 animate-pulse"></span> Low Stock: Only {{ $product->stock_quantity }} left!
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+                            <span class="size-1.5 rounded-full bg-emerald-600"></span> In Stock ({{ $product->stock_quantity }} available)
                         </span>
                     @endif
                 </div>
 
-                <!-- Title -->
+                <!-- Title & SKU -->
                 <div>
                     <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight leading-tight">
                         {{ $product->name }}
@@ -68,7 +105,7 @@
                 <!-- Price Box -->
                 <div class="rounded-2xl bg-slate-50 border border-slate-200/80 p-5">
                     <div class="flex items-baseline gap-3">
-                        <span class="text-3xl md:text-4xl font-black text-emerald-600">
+                        <span id="displayPrice" class="text-3xl md:text-4xl font-black text-emerald-600">
                             ৳{{ number_format($product->new_price, 2) }}
                         </span>
                         @if($product->old_price > $product->new_price)
@@ -85,25 +122,56 @@
                     @endif
                 </div>
 
+                <!-- Product Variants Selector -->
+                @if($product->activeVariants->isNotEmpty())
+                    <div class="space-y-4 pt-2 border-t border-slate-100">
+                        @foreach($product->activeVariants->groupBy('attribute_name') as $attrName => $variantGroup)
+                            <div>
+                                <span class="text-xs font-bold text-slate-800 block mb-2">{{ $attrName }}:</span>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach($variantGroup as $vIdx => $v)
+                                        <button
+                                            type="button"
+                                            onclick="selectVariant('{{ Str::slug($attrName) }}', {{ $v->price ? $v->price : 'null' }}, this)"
+                                            class="variant-btn-{{ Str::slug($attrName) }} px-3.5 py-2 rounded-xl text-xs font-semibold border transition {{ $vIdx === 0 ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:border-slate-400' }}"
+                                        >
+                                            <span>{{ $v->attribute_value }}</span>
+                                            @if($v->price && $v->price != $product->new_price)
+                                                <span class="text-[10px] opacity-80">(৳{{ number_format($v->price, 0) }})</span>
+                                            @endif
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
                 <!-- Description -->
-                <div class="space-y-2">
+                <div class="space-y-2 pt-2 border-t border-slate-100">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Description</h3>
                     <p class="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
                         {{ $product->description }}
                     </p>
                 </div>
 
-                <!-- Metadata Details -->
+                <!-- Specifications Overview -->
                 <div class="pt-4 border-t border-slate-100">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Specifications</h3>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <div class="p-3 rounded-xl bg-slate-50">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
                             <span class="text-slate-400 block text-[10px]">Category</span>
                             <span class="font-bold text-slate-800">{{ $product->category->name ?? 'N/A' }}</span>
                         </div>
-                        <div class="p-3 rounded-xl bg-slate-50">
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
                             <span class="text-slate-400 block text-[10px]">Subcategory</span>
                             <span class="font-bold text-slate-800">{{ $product->subcategory->name ?? 'N/A' }}</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                            <span class="text-slate-400 block text-[10px]">Availability</span>
+                            <span class="font-bold {{ $product->stock_quantity > 0 ? 'text-emerald-700' : 'text-red-600' }}">
+                                {{ $product->stock_status_label }}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -112,11 +180,12 @@
                 <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
                     @auth
                         <a href="{{ route('admin.products.edit', $product->id) }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition shadow-sm shadow-indigo-600/30">
-                            Edit Product in Admin
+                            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            <span>Edit Product in Admin</span>
                         </a>
                     @endauth
                     <a href="{{ route('catalog.public') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition">
-                        Back to Catalog
+                        ← Back to Catalog
                     </a>
                 </div>
             </div>
@@ -161,5 +230,43 @@
         </div>
     @endif
 </div>
-@endsection
 
+@push('scripts')
+<script>
+    const baseProductPrice = {{ (float) $product->new_price }};
+
+    function switchMainImage(imageUrl, buttonElement) {
+        const mainImg = document.getElementById('mainProductImage');
+        mainImg.style.opacity = '0.3';
+        setTimeout(() => {
+            mainImg.src = imageUrl;
+            mainImg.style.opacity = '1';
+        }, 150);
+
+        document.querySelectorAll('.gallery-thumb').forEach(btn => {
+            btn.classList.remove('border-indigo-600', 'opacity-100');
+            btn.classList.add('border-slate-200', 'opacity-70');
+        });
+
+        buttonElement.classList.remove('border-slate-200', 'opacity-70');
+        buttonElement.classList.add('border-indigo-600', 'opacity-100');
+    }
+
+    function selectVariant(groupSlug, price, buttonElement) {
+        document.querySelectorAll(`.variant-btn-${groupSlug}`).forEach(btn => {
+            btn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600', 'shadow-xs');
+            btn.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
+        });
+
+        buttonElement.classList.remove('bg-white', 'text-slate-700', 'border-slate-200');
+        buttonElement.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600', 'shadow-xs');
+
+        if (price !== null && !isNaN(price)) {
+            document.getElementById('displayPrice').innerText = '৳' + parseFloat(price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        } else {
+            document.getElementById('displayPrice').innerText = '৳' + baseProductPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+    }
+</script>
+@endpush
+@endsection

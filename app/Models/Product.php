@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -23,6 +24,7 @@ class Product extends Model
         'image',
         'old_price',
         'new_price',
+        'stock_quantity',
         'is_active',
     ];
 
@@ -32,6 +34,7 @@ class Product extends Model
     protected $casts = [
         'old_price' => 'decimal:2',
         'new_price' => 'decimal:2',
+        'stock_quantity' => 'integer',
         'is_active' => 'boolean',
     ];
 
@@ -42,6 +45,8 @@ class Product extends Model
         'image_url',
         'discount_percentage',
         'saved_amount',
+        'stock_status',
+        'stock_status_label',
     ];
 
     /**
@@ -142,6 +147,34 @@ class Product extends Model
     }
 
     /**
+     * Accessor for stock status key.
+     */
+    public function getStockStatusAttribute(): string
+    {
+        if ($this->stock_quantity <= 0) {
+            return 'out_of_stock';
+        }
+
+        if ($this->stock_quantity <= 5) {
+            return 'low_stock';
+        }
+
+        return 'in_stock';
+    }
+
+    /**
+     * Accessor for human-readable stock status label.
+     */
+    public function getStockStatusLabelAttribute(): string
+    {
+        return match ($this->stock_status) {
+            'out_of_stock' => 'Out of Stock',
+            'low_stock' => "Low Stock ({$this->stock_quantity} left)",
+            default => "In Stock ({$this->stock_quantity})",
+        };
+    }
+
+    /**
      * Get the category of the product.
      *
      * @return BelongsTo<Category, $this>
@@ -159,5 +192,35 @@ class Product extends Model
     public function subcategory(): BelongsTo
     {
         return $this->belongsTo(Subcategory::class);
+    }
+
+    /**
+     * Get the gallery images for the product.
+     *
+     * @return HasMany<ProductImage, $this>
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+    }
+
+    /**
+     * Get the variants for the product.
+     *
+     * @return HasMany<ProductVariant, $this>
+     */
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
+    /**
+     * Get only active variants for the product.
+     *
+     * @return HasMany<ProductVariant, $this>
+     */
+    public function activeVariants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class)->where('is_active', true);
     }
 }

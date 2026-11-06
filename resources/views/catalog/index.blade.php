@@ -15,19 +15,6 @@
                     Explore our curated collection of high-quality products organized by category and subcategory.
                 </p>
             </div>
-
-            <div class="flex items-center gap-3 shrink-0">
-                <div class="rounded-2xl border border-slate-200/80 bg-white/90 backdrop-blur-xs px-5 py-3 text-center shadow-xs">
-                    <span class="block text-2xl font-black text-slate-900">{{ $totalProducts }}</span>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Live Products</span>
-                </div>
-                <div class="rounded-2xl border border-slate-200/80 bg-white/90 backdrop-blur-xs px-5 py-3 text-center shadow-xs">
-                    <span class="block text-2xl font-black text-purple-600">
-                        {{ $categories->sum(fn($c) => $c->subcategories->count()) }}
-                    </span>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Subcategories</span>
-                </div>
-            </div>
         </div>
 
         <!-- Quick Filter Tabs -->
@@ -141,6 +128,16 @@
                                                                 </span>
                                                             @endif
                                                         </div>
+
+                                                        @if($product->stock_status === 'out_of_stock')
+                                                            <span class="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
+                                                                Out of Stock
+                                                            </span>
+                                                        @elseif($product->stock_status === 'low_stock')
+                                                            <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
+                                                                Low Stock ({{ $product->stock_quantity }})
+                                                            </span>
+                                                        @endif
                                                     </div>
 
                                                     <!-- SEO Slug Link -->

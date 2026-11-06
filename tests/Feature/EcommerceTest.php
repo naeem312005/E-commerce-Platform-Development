@@ -97,6 +97,7 @@ class EcommerceTest extends TestCase
             'image' => $image,
             'old_price' => 5000.00,
             'new_price' => 4200.00,
+            'stock_quantity' => 15,
             'is_active' => true,
         ]);
 
@@ -181,5 +182,44 @@ class EcommerceTest extends TestCase
         $response = $this->get(route('catalog.public'));
         $response->assertStatus(200);
         $response->assertSee('Consoles');
+    }
+
+    public function test_can_create_product_with_gallery_images_and_variants(): void
+    {
+        Storage::fake('public');
+
+        $category = Category::create(['name' => 'Smartphones', 'slug' => 'smartphones']);
+        $subcategory = Subcategory::create(['category_id' => $category->id, 'name' => 'Android', 'slug' => 'android']);
+
+        $image = UploadedFile::fake()->image('cover.jpg');
+        $gallery1 = UploadedFile::fake()->image('angle1.jpg');
+        $gallery2 = UploadedFile::fake()->image('angle2.jpg');
+
+        $response = $this->actingAs($this->user)->post(route('admin.products.store'), [
+            'category_id' => $category->id,
+            'subcategory_id' => $subcategory->id,
+            'name' => 'Pixel 9 Pro Fold',
+            'description' => 'Google foldable phone.',
+            'image' => $image,
+            'gallery' => [$gallery1, $gallery2],
+            'variants' => [
+                ['attribute_name' => 'Color', 'attribute_value' => 'Porcelain', 'price' => null, 'stock_quantity' => 10],
+                ['attribute_name' => 'Color', 'attribute_value' => 'Obsidian', 'price' => null, 'stock_quantity' => 8],
+                ['attribute_name' => 'Storage', 'attribute_value' => '512GB', 'price' => 189000, 'stock_quantity' => 5],
+            ],
+            'old_price' => 180000.00,
+            'new_price' => 165000.00,
+            'stock_quantity' => 23,
+            'is_active' => true,
+        ]);
+
+        $response->assertRedirect(route('admin.products.index'));
+
+        $product = Product::where('slug', 'pixel-9-pro-fold')->first();
+        $this->assertNotNull($product);
+        $this->assertEquals(23, $product->stock_quantity);
+        $this->assertEquals('in_stock', $product->stock_status);
+        $this->assertCount(2, $product->images);
+        $this->assertCount(3, $product->variants);
     }
 }

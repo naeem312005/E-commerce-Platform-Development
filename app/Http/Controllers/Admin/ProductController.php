@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,7 @@ class ProductController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Product::with(['category:id,name,slug', 'subcategory:id,name,slug']);
+        $query = Product::with(['category:id,name,slug', 'subcategory:id,name,slug', 'images', 'variants']);
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -85,7 +86,35 @@ class ProductController extends Controller
             $validated['slug'] = Product::generateUniqueSlug($validated['name']);
             $validated['sku'] = Product::generateUniqueSku();
 
-            Product::create($validated);
+            /** @var Product $product */
+            $product = Product::create($validated);
+
+            // Handle gallery images
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $index => $galleryFile) {
+                    $path = $galleryFile->store('products/gallery', 'public');
+                    $product->images()->create([
+                        'image' => $path,
+                        'sort_order' => $index,
+                    ]);
+                }
+            }
+
+            // Handle variants
+            if ($request->filled('variants') && is_array($request->input('variants'))) {
+                foreach ($request->input('variants') as $variantData) {
+                    if (! empty($variantData['attribute_name']) && ! empty($variantData['attribute_value'])) {
+                        $product->variants()->create([
+                            'attribute_name' => $variantData['attribute_name'],
+                            'attribute_value' => $variantData['attribute_value'],
+                            'sku' => ! empty($variantData['sku']) ? $variantData['sku'] : null,
+                            'price' => isset($variantData['price']) && $variantData['price'] !== '' ? $variantData['price'] : null,
+                            'stock_quantity' => isset($variantData['stock_quantity']) && $variantData['stock_quantity'] !== '' ? (int) $variantData['stock_quantity'] : 0,
+                            'is_active' => ! empty($variantData['is_active']),
+                        ]);
+                    }
+                }
+            }
         });
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully!');
@@ -96,7 +125,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product): View
     {
-        $product->load(['category:id,name', 'subcategory:id,name']);
+        $product->load(['category:id,name', 'subcategory:id,name', 'images', 'variants']);
 
         $categories = Category::with(['subcategories' => function ($q) {
             $q->where('is_active', true)->orderBy('name');
@@ -131,6 +160,68 @@ class ProductController extends Controller
             }
 
             $product->update($validated);
+
+            // Delete requested gallery images
+            if ($request->filled('delete_images') && is_array($request->input('delete_images'))) {
+                $imagesToDelete = $product->images()->whereIn('id', $request->input('delete_images'))->get();
+                foreach ($imagesToDelete as $img) {
+                    if ($img->image && ! str_starts_with($img->image, 'http') && Storage::disk('public')->exists($img->image)) {
+                        Storage::disk('public')->delete($img->image);
+                    }
+                    $img->delete();
+                }
+            }
+
+            // Append new gallery images
+            if ($request->hasFile('gallery')) {
+                $currentMaxSort = (int) $product->images()->max('sort_order');
+                foreach ($request->file('gallery') as $index => $galleryFile) {
+                    $path = $galleryFile->store('products/gallery', 'public');
+                    $product->images()->create([
+                        'image' => $path,
+                        'sort_order' => $currentMaxSort + $index + 1,
+                    ]);
+                }
+            }
+
+            // Sync variants
+            if ($request->has('variants')) {
+                $incomingVariants = (array) $request->input('variants');
+                $submittedIds = [];
+
+                foreach ($incomingVariants as $variantData) {
+                    if (empty($variantData['attribute_name']) || empty($variantData['attribute_value'])) {
+                        continue;
+                    }
+
+                    $variantPayload = [
+                        'attribute_name' => $variantData['attribute_name'],
+                        'attribute_value' => $variantData['attribute_value'],
+                        'sku' => ! empty($variantData['sku']) ? $variantData['sku'] : null,
+                        'price' => isset($variantData['price']) && $variantData['price'] !== '' ? $variantData['price'] : null,
+                        'stock_quantity' => isset($variantData['stock_quantity']) && $variantData['stock_quantity'] !== '' ? (int) $variantData['stock_quantity'] : 0,
+                        'is_active' => ! empty($variantData['is_active']),
+                    ];
+
+                    if (! empty($variantData['id'])) {
+                        $variant = $product->variants()->find($variantData['id']);
+                        if ($variant instanceof ProductVariant) {
+                            $variant->update($variantPayload);
+                            $submittedIds[] = $variant->id;
+
+                            continue;
+                        }
+                    }
+
+                    $newVariant = $product->variants()->create($variantPayload);
+                    $submittedIds[] = $newVariant->id;
+                }
+
+                // Delete variants that were removed
+                $product->variants()->whereNotIn('id', $submittedIds)->delete();
+            } else {
+                $product->variants()->delete();
+            }
         });
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
@@ -143,6 +234,12 @@ class ProductController extends Controller
     {
         if ($product->image && ! str_starts_with($product->image, 'http') && Storage::disk('public')->exists($product->image)) {
             Storage::disk('public')->delete($product->image);
+        }
+
+        foreach ($product->images as $img) {
+            if ($img->image && ! str_starts_with($img->image, 'http') && Storage::disk('public')->exists($img->image)) {
+                Storage::disk('public')->delete($img->image);
+            }
         }
 
         $product->delete();

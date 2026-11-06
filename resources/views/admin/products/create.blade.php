@@ -1,35 +1,36 @@
 @extends('layouts.app')
 
 @section('title', 'Add New Product')
-@section('header_title', 'Create Product')
+
+@section('header', 'Add New Product')
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
-    <!-- Back Link -->
-    <div>
-        <a href="{{ route('admin.products.index') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 transition">
-            ← Back to Products
+    <!-- Top Back Navigation -->
+    <div class="flex items-center justify-between">
+        <a href="{{ route('admin.products.index') }}" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-800 transition">
+            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>Back to Products</span>
         </a>
     </div>
 
-    <!-- Form Container -->
+    <!-- Product Form Card -->
     <div class="rounded-2xl border border-slate-200/80 bg-white p-6 md:p-8 shadow-xs">
-        <div class="pb-6 border-b border-slate-100">
-            <h2 class="text-xl font-extrabold text-slate-900">Add New Product</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Define categorization, media, pricing, and product details.</p>
-        </div>
-
-        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="mt-6 space-y-6">
+        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8" id="productForm">
             @csrf
 
-            <!-- 1. Category & Subcategory Hierarchy -->
+            <!-- 1. Category & Subcategory Selection (Dependent Dropdown) -->
             <div class="rounded-xl bg-slate-50 border border-slate-200/80 p-5 space-y-4">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">1. Categorization & Hierarchy</h3>
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">1. Category Classification</h3>
+                    <span class="text-[11px] font-semibold text-indigo-600">Dependent Cascading Dropdown</span>
+                </div>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <!-- Category Select -->
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">
-                            Parent Category <span class="text-red-500">*</span>
+                            Primary Category <span class="text-red-500">*</span>
                         </label>
                         <select
                             id="category_id"
@@ -38,10 +39,10 @@
                             onchange="onCategoryChange()"
                             class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs text-slate-800 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 outline-none bg-white"
                         >
-                            <option value="" disabled selected>-- Select Parent Category --</option>
-                            @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
-                                    {{ $cat->name }} ({{ $cat->subcategories->count() }} subcategories)
+                            <option value="" disabled selected>-- Select Category --</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }} ({{ $category->subcategories->count() }} subcategories)
                                 </option>
                             @endforeach
                         </select>
@@ -50,12 +51,14 @@
                         @enderror
                     </div>
 
-                    <!-- Dynamic Subcategory Select -->
+                    <!-- Subcategory Select (Populated dynamically) -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
-                            <span>Subcategory <span class="text-red-500">*</span></span>
-                            <span id="subcat_count_label" class="text-[10px] text-slate-400 font-normal"></span>
-                        </label>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-bold text-slate-700">
+                                Subcategory <span class="text-red-500">*</span>
+                            </label>
+                            <span id="subcat_count_label" class="text-[10px] text-slate-400 font-medium"></span>
+                        </div>
                         <select
                             id="subcategory_id"
                             name="subcategory_id"
@@ -111,9 +114,9 @@
                 </div>
             </div>
 
-            <!-- 3. Image Upload with Live Preview -->
+            <!-- 3. Primary Product Image -->
             <div class="space-y-4">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">3. Product Image <span class="text-red-500">*</span></h3>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">3. Primary Product Image <span class="text-red-500">*</span></h3>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
                     <div class="sm:col-span-2 relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 p-6 text-center hover:bg-slate-50 transition cursor-pointer">
@@ -127,7 +130,7 @@
                             class="absolute inset-0 size-full opacity-0 cursor-pointer"
                         >
                         <svg class="size-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        <p class="text-xs font-semibold text-slate-700">Click or drag image to upload</p>
+                        <p class="text-xs font-semibold text-slate-700">Click or drag main image to upload</p>
                         <p class="text-[10px] text-slate-400 mt-0.5">JPG, PNG, WEBP up to 5MB</p>
                     </div>
 
@@ -137,7 +140,7 @@
                             <span id="preview_placeholder" class="text-[10px] text-slate-400 font-medium">No image</span>
                             <img id="preview_img" class="hidden size-full object-cover" alt="Preview">
                         </div>
-                        <span class="text-[11px] text-slate-400 mt-1">Live Preview</span>
+                        <span class="text-[11px] text-slate-400 mt-1">Main Cover Preview</span>
                     </div>
                 </div>
                 @error('image')
@@ -145,15 +148,45 @@
                 @enderror
             </div>
 
-            <!-- 4. Pricing & Discount Calculation -->
-            <div class="rounded-xl bg-slate-50 border border-slate-200/80 p-5 space-y-4">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">4. Pricing (৳ BDT)</h3>
+            <!-- 4. Additional Gallery Images -->
+            <div class="space-y-4 rounded-xl bg-slate-50/60 border border-slate-200/80 p-5">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">4. Product Gallery Images (Optional)</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Upload multiple photos for customer thumbnail view (up to 8 images).</p>
+                    </div>
+                </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-white p-6 text-center hover:bg-slate-50 transition cursor-pointer">
+                    <input
+                        type="file"
+                        id="gallery_input"
+                        name="gallery[]"
+                        accept="image/*"
+                        multiple
+                        onchange="previewGalleryImages(event)"
+                        class="absolute inset-0 size-full opacity-0 cursor-pointer"
+                    >
+                    <svg class="size-8 text-indigo-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                    <p class="text-xs font-bold text-slate-800">Select Multiple Photos for Gallery</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Hold Ctrl / Cmd to select several files at once</p>
+                </div>
+
+                <div id="gallery_preview_container" class="hidden grid grid-cols-4 sm:grid-cols-6 gap-3 pt-2"></div>
+                @error('gallery.*')
+                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- 5. Pricing & Stock Management -->
+            <div class="rounded-xl bg-slate-50 border border-slate-200/80 p-5 space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">5. Pricing & Stock Management</h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <!-- Old Price -->
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">
-                            Original / Old Price (৳) <span class="text-red-500">*</span>
+                            Original Price (৳) <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">৳</span>
@@ -178,7 +211,7 @@
                     <!-- New Price -->
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">
-                            Current / New Price (৳) <span class="text-red-500">*</span>
+                            Sale Price (৳) <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">৳</span>
@@ -199,6 +232,27 @@
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <!-- Stock Quantity -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Stock Quantity <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="number"
+                            id="stock_quantity"
+                            name="stock_quantity"
+                            min="0"
+                            value="{{ old('stock_quantity', 10) }}"
+                            required
+                            placeholder="e.g. 15"
+                            class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs text-slate-800 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 outline-none bg-white"
+                        >
+                        <p class="text-[10px] text-slate-400 mt-1">0 = Out of Stock, 1-5 = Low Stock</p>
+                        @error('stock_quantity')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <!-- Dynamic Live Discount Calculator -->
@@ -211,7 +265,32 @@
                 </div>
             </div>
 
-            <!-- 5. Active Status Toggle -->
+            <!-- 6. Product Variants -->
+            <div class="space-y-4 rounded-xl bg-slate-50 border border-slate-200/80 p-5">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">6. Product Variants (Color, Size, Storage, etc.)</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Define custom choices for customers.</p>
+                    </div>
+                    <button
+                        type="button"
+                        onclick="addVariantRow()"
+                        class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold rounded-xl bg-purple-600 hover:bg-purple-700 text-white transition shadow-xs self-start"
+                    >
+                        <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span>+ Add Variant</span>
+                    </button>
+                </div>
+
+                <div id="variants_container" class="space-y-2">
+                    <!-- Variant rows inserted dynamically via JS -->
+                </div>
+                <p id="no_variants_text" class="text-xs text-slate-400 italic py-2">
+                    No variants added. Click "+ Add Variant" above to add choices like Color or Size.
+                </p>
+            </div>
+
+            <!-- 7. Active Status Toggle -->
             <div class="flex items-center gap-2 pt-2">
                 <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', '1') ? 'checked' : '' }} class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 size-4">
                 <label for="is_active" class="text-xs font-bold text-slate-700 cursor-pointer">
@@ -219,13 +298,18 @@
                 </label>
             </div>
 
-            <!-- Submit Buttons -->
-            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                <a href="{{ route('admin.products.index') }}" class="px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50">
+            <!-- Submit Button Bar -->
+            <div class="pt-6 border-t border-slate-100 flex items-center justify-end gap-3">
+                <a href="{{ route('admin.products.index') }}" class="px-5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition">
                     Cancel
                 </a>
-                <button type="submit" id="submit_btn" class="px-6 py-2.5 rounded-xl bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-700 shadow-sm shadow-indigo-600/30">
-                    Save & Publish Product
+                <button
+                    type="submit"
+                    id="submit_btn"
+                    class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition shadow-md shadow-indigo-600/30 flex items-center gap-2"
+                >
+                    <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span>Save Product</span>
                 </button>
             </div>
         </form>
@@ -234,8 +318,8 @@
 
 @push('scripts')
 <script>
-    // Embedded category data for dynamic dependent dropdown
     const categoriesData = @json($categories);
+    let variantIndex = 0;
 
     function onCategoryChange(selectedSubcatId = null) {
         const catSelect = document.getElementById('category_id');
@@ -296,6 +380,70 @@
         }
     }
 
+    function previewGalleryImages(event) {
+        const files = event.target.files;
+        const container = document.getElementById('gallery_preview_container');
+        container.innerHTML = '';
+
+        if (files && files.length > 0) {
+            container.classList.remove('hidden');
+            Array.from(files).forEach((file, idx) => {
+                const div = document.createElement('div');
+                div.className = 'relative aspect-square rounded-xl overflow-hidden border border-slate-200 bg-slate-100 shadow-xs';
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.className = 'size-full object-cover';
+                div.appendChild(img);
+                container.appendChild(div);
+            });
+        } else {
+            container.classList.add('hidden');
+        }
+    }
+
+    function addVariantRow(data = {}) {
+        const container = document.getElementById('variants_container');
+        const emptyText = document.getElementById('no_variants_text');
+        emptyText.classList.add('hidden');
+
+        const idx = variantIndex++;
+        const row = document.createElement('div');
+        row.id = `variant_row_${idx}`;
+        row.className = 'grid grid-cols-1 sm:grid-cols-12 gap-2 items-center bg-white p-3 rounded-xl border border-slate-200 shadow-2xs';
+
+        row.innerHTML = `
+            <div class="sm:col-span-3">
+                <input type="text" name="variants[${idx}][attribute_name]" value="${data.attribute_name || 'Color'}" placeholder="Type (e.g. Color, Size)" required class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-purple-600">
+            </div>
+            <div class="sm:col-span-4">
+                <input type="text" name="variants[${idx}][attribute_value]" value="${data.attribute_value || ''}" placeholder="Option (e.g. Space Gray, 256GB)" required class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-purple-600">
+            </div>
+            <div class="sm:col-span-2">
+                <input type="number" step="0.01" name="variants[${idx}][price]" value="${data.price || ''}" placeholder="Price (৳) (opt)" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-purple-600">
+            </div>
+            <div class="sm:col-span-2">
+                <input type="number" min="0" name="variants[${idx}][stock_quantity]" value="${data.stock_quantity ?? 5}" placeholder="Stock" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-purple-600">
+            </div>
+            <div class="sm:col-span-1 text-right">
+                <button type="button" onclick="removeVariantRow(${idx})" class="p-1.5 text-slate-400 hover:text-red-600 transition" title="Remove variant">
+                    <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </button>
+            </div>
+        `;
+
+        container.appendChild(row);
+    }
+
+    function removeVariantRow(idx) {
+        const row = document.getElementById(`variant_row_${idx}`);
+        if (row) row.remove();
+
+        const container = document.getElementById('variants_container');
+        if (container.children.length === 0) {
+            document.getElementById('no_variants_text').classList.remove('hidden');
+        }
+    }
+
     function calculateDiscount() {
         const oldP = parseFloat(document.getElementById('old_price').value);
         const newP = parseFloat(document.getElementById('new_price').value);
@@ -342,4 +490,3 @@
 </script>
 @endpush
 @endsection
-

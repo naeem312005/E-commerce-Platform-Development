@@ -56,6 +56,19 @@ class ProductRequest extends FormRequest
                 'min:0',
                 'lte:old_price',
             ],
+            'stock_quantity' => ['required', 'integer', 'min:0'],
+            'gallery' => ['nullable', 'array', 'max:8'],
+            'gallery.*' => ['image', 'mimes:jpeg,png,jpg,webp,svg', 'max:5120'],
+            'delete_images' => ['nullable', 'array'],
+            'delete_images.*' => ['integer'],
+            'variants' => ['nullable', 'array'],
+            'variants.*.id' => ['nullable', 'integer'],
+            'variants.*.attribute_name' => ['required_with:variants', 'string', 'max:100'],
+            'variants.*.attribute_value' => ['required_with:variants', 'string', 'max:100'],
+            'variants.*.sku' => ['nullable', 'string', 'max:100'],
+            'variants.*.price' => ['nullable', 'numeric', 'min:0'],
+            'variants.*.stock_quantity' => ['nullable', 'integer', 'min:0'],
+            'variants.*.is_active' => ['nullable', 'boolean'],
             'is_active' => ['sometimes', 'boolean'],
         ];
     }
@@ -86,6 +99,12 @@ class ProductRequest extends FormRequest
             'new_price.numeric' => 'New price must be a valid number.',
             'new_price.min' => 'New price cannot be negative.',
             'new_price.lte' => 'The new (sale) price cannot be greater than the old (original) price.',
+            'stock_quantity.required' => 'Stock quantity is required.',
+            'stock_quantity.integer' => 'Stock quantity must be a whole number.',
+            'stock_quantity.min' => 'Stock quantity cannot be negative.',
+            'gallery.*.image' => 'Each gallery file must be a valid image.',
+            'gallery.*.mimes' => 'Allowed gallery image formats: jpeg, png, jpg, webp, svg.',
+            'gallery.*.max' => 'Each gallery image size cannot exceed 5MB.',
         ];
     }
 }
