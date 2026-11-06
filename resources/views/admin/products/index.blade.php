@@ -179,13 +179,13 @@
                                     <button
                                         type="button"
                                         onclick="toggleStatus('{{ route('admin.products.toggle-status', $prod->id) }}', this, 'Active', 'Inactive')"
-                                        class="group inline-flex items-center gap-2.5 cursor-pointer focus:outline-none"
+                                        class="inline-flex items-center gap-2 cursor-pointer focus:outline-none"
                                         title="Click to toggle status"
                                     >
-                                        <span class="toggle-track relative inline-block h-5 w-9 shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out {{ $prod->is_active ? 'bg-emerald-500' : 'bg-slate-300' }}">
-                                            <span class="toggle-thumb pointer-events-none absolute top-[2px] left-[2px] h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out {{ $prod->is_active ? 'translate-x-full' : 'translate-x-0' }}"></span>
+                                        <span class="switch-track {{ $prod->is_active ? 'active' : 'inactive' }}">
+                                            <span class="switch-thumb"></span>
                                         </span>
-                                        <span class="toggle-label text-xs font-semibold select-none {{ $prod->is_active ? 'text-emerald-700' : 'text-slate-400' }}">
+                                        <span class="switch-label text-xs font-semibold select-none {{ $prod->is_active ? 'text-emerald-700' : 'text-slate-400' }}">
                                             {{ $prod->is_active ? 'Active' : 'Inactive' }}
                                         </span>
                                     </button>

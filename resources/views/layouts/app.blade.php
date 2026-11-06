@@ -41,8 +41,41 @@
 
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .toggle-track { width: 36px !important; height: 20px !important; }
-        .toggle-thumb { width: 16px !important; height: 16px !important; top: 2px !important; left: 2px !important; }
+        .switch-track {
+            position: relative;
+            display: inline-block;
+            width: 38px !important;
+            height: 22px !important;
+            border-radius: 9999px;
+            transition: background-color 0.2s ease-in-out;
+            cursor: pointer;
+            flex-shrink: 0;
+            vertical-align: middle;
+        }
+        .switch-track.active {
+            background-color: #10b981 !important; /* emerald-500 */
+        }
+        .switch-track.inactive {
+            background-color: #cbd5e1 !important; /* slate-300 */
+        }
+        .switch-thumb {
+            position: absolute;
+            top: 3px !important;
+            left: 3px !important;
+            width: 16px !important;
+            height: 16px !important;
+            border-radius: 9999px;
+            background-color: #ffffff !important;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+            pointer-events: none;
+        }
+        .switch-track.active .switch-thumb {
+            transform: translateX(16px) !important;
+        }
+        .switch-track.inactive .switch-thumb {
+            transform: translateX(0) !important;
+        }
     </style>
 </head>
 <body class="h-full antialiased text-slate-800">
@@ -182,9 +215,8 @@
     <script>
         async function toggleStatus(url, buttonElement, activeText = 'Active', inactiveText = 'Inactive') {
             buttonElement.disabled = true;
-            const track = buttonElement.querySelector('.toggle-track');
-            const thumb = buttonElement.querySelector('.toggle-thumb');
-            const label = buttonElement.querySelector('.toggle-label');
+            const track = buttonElement.querySelector('.switch-track') || buttonElement.querySelector('.toggle-track');
+            const label = buttonElement.querySelector('.switch-label') || buttonElement.querySelector('.toggle-label');
 
             try {
                 const response = await fetch(url, {
@@ -199,20 +231,16 @@
                 const data = await response.json();
                 if (data.success) {
                     if (data.is_active) {
-                        track.classList.remove('bg-slate-300');
-                        track.classList.add('bg-emerald-500');
-                        thumb.classList.remove('translate-x-0');
-                        thumb.classList.add('translate-x-full');
+                        track.classList.remove('inactive', 'bg-slate-300');
+                        track.classList.add('active', 'bg-emerald-500');
                         if (label) {
                             label.innerText = activeText;
                             label.classList.remove('text-slate-400');
                             label.classList.add('text-emerald-700');
                         }
                     } else {
-                        track.classList.remove('bg-emerald-500');
-                        track.classList.add('bg-slate-300');
-                        thumb.classList.remove('translate-x-full');
-                        thumb.classList.add('translate-x-0');
+                        track.classList.remove('active', 'bg-emerald-500');
+                        track.classList.add('inactive', 'bg-slate-300');
                         if (label) {
                             label.innerText = inactiveText;
                             label.classList.remove('text-emerald-700');
