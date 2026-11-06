@@ -59,11 +59,29 @@
             font-size: 0.8125rem !important;
             color: #475569 !important;
         }
-        .swal2-toast {
+
+        /* Colorful SweetAlert2 Toasts */
+        .swal2-colored-toast {
             border-radius: 1rem !important;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
-            border: 1px solid #e2e8f0 !important;
-            padding: 0.75rem 1rem !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.15) !important;
+            padding: 0.85rem 1.25rem !important;
+            font-weight: 600 !important;
+        }
+        .swal2-colored-toast .swal2-title {
+            color: #ffffff !important;
+            font-size: 0.875rem !important;
+            font-weight: 700 !important;
+            line-height: 1.35 !important;
+        }
+        .swal2-colored-toast .swal2-timer-progress-bar {
+            background: rgba(255, 255, 255, 0.75) !important;
+            height: 3px !important;
+        }
+        .swal2-colored-toast .swal2-icon {
+            margin: 0 0.75rem 0 0 !important;
+        }
+        .swal2-colored-toast .swal2-icon.swal2-icon-show {
+            border-color: rgba(255, 255, 255, 0.85) !important;
         }
 
         .switch-track {
@@ -238,18 +256,46 @@
     </div>
 
     <script>
-        // Global SweetAlert2 Toast configuration
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3500,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-            }
-        });
+        // Global SweetAlert2 Colorful Toast configuration
+        const Toast = {
+            fire: function(opts = {}) {
+                let icon = opts.icon || 'success';
+                let title = opts.title || '';
+                let bg = '#10b981'; // Green for success
+                if (icon === 'error') {
+                    bg = '#ef4444'; // Red for error
+                } else if (icon === 'warning') {
+                    bg = '#f59e0b'; // Amber for warning
+                } else if (icon === 'info') {
+                    bg = '#4f46e5'; // Indigo for info
+                }
+
+                return Swal.fire({
+                    toast: true,
+                    position: opts.position || 'top-end',
+                    icon: icon,
+                    iconColor: '#ffffff',
+                    title: title,
+                    text: opts.text || '',
+                    showConfirmButton: false,
+                    timer: opts.timer || 3500,
+                    timerProgressBar: true,
+                    color: '#ffffff',
+                    background: bg,
+                    customClass: {
+                        popup: 'swal2-colored-toast'
+                    },
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+            },
+            success: function(title, text = '') { return this.fire({ icon: 'success', title, text }); },
+            error: function(title, text = '') { return this.fire({ icon: 'error', title, text }); },
+            warning: function(title, text = '') { return this.fire({ icon: 'warning', title, text }); },
+            info: function(title, text = '') { return this.fire({ icon: 'info', title, text }); }
+        };
         window.Toast = Toast;
 
         async function toggleStatus(url, buttonElement, activeText = 'Active', inactiveText = 'Inactive') {
