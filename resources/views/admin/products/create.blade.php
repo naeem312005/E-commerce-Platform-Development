@@ -275,18 +275,27 @@
                     <button
                         type="button"
                         onclick="addVariantRow()"
-                        class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold rounded-xl bg-purple-600 hover:bg-purple-700 text-white transition shadow-xs self-start"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition shadow-xs self-start"
                     >
                         <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                        <span>+ Add Variant</span>
+                        <span>Add Variant</span>
                     </button>
+                </div>
+
+                <div id="variants_header" class="hidden sm:grid grid-cols-12 gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 pt-1">
+                    <div class="col-span-2">Type (e.g. Color)</div>
+                    <div class="col-span-3">Option Name</div>
+                    <div class="col-span-3">Variant Photo</div>
+                    <div class="col-span-2">Price (৳) (Opt)</div>
+                    <div class="col-span-1">Stock</div>
+                    <div class="col-span-1 text-right">Delete</div>
                 </div>
 
                 <div id="variants_container" class="space-y-2">
                     <!-- Variant rows inserted dynamically via JS -->
                 </div>
                 <p id="no_variants_text" class="text-xs text-slate-400 italic py-2">
-                    No variants added. Click "+ Add Variant" above to add choices like Color or Size.
+                    No variants added. Click "Add Variant" above to add choices like Color or Size.
                 </p>
             </div>
 
@@ -404,7 +413,9 @@
     function addVariantRow(data = {}) {
         const container = document.getElementById('variants_container');
         const emptyText = document.getElementById('no_variants_text');
+        const header = document.getElementById('variants_header');
         emptyText.classList.add('hidden');
+        if (header) header.classList.remove('hidden');
 
         const idx = variantIndex++;
         const row = document.createElement('div');
@@ -444,6 +455,8 @@
         const container = document.getElementById('variants_container');
         if (container.children.length === 0) {
             document.getElementById('no_variants_text').classList.remove('hidden');
+            const header = document.getElementById('variants_header');
+            if (header) header.classList.add('hidden');
         }
     }
 
