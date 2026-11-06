@@ -36,16 +36,6 @@
                     </div>
                 </div>
 
-                <!-- SEO Box -->
-                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs flex items-center justify-between">
-                    <div>
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">SEO Slug canonical URL:</span>
-                        <code class="text-slate-800 font-mono text-xs">/products/<strong>{{ $product->slug }}</strong></code>
-                    </div>
-                    <span class="rounded-full bg-emerald-100 text-emerald-800 px-2.5 py-0.5 text-[10px] font-bold">
-                        SEO Friendly
-                    </span>
-                </div>
             </div>
 
             <!-- Right: Details & Pricing -->

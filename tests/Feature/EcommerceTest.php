@@ -183,4 +183,3 @@ class EcommerceTest extends TestCase
         $response->assertSee('Consoles');
     }
 }
-

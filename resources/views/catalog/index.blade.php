@@ -8,14 +8,11 @@
     <div class="rounded-3xl border border-slate-200/80 bg-gradient-to-r from-indigo-50 via-white to-purple-50 p-6 md:p-10 shadow-xs">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wider mb-3">
-                    ✨ Assignment Requirement 4
-                </span>
                 <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
-                    Products Showcase by Subcategory
+                    Featured Products & Collections
                 </h1>
                 <p class="text-sm text-slate-600 mt-2 max-w-2xl leading-relaxed">
-                    All products organized by their respective subcategories, SEO-friendly slugs, dynamic pricing discounts, and instant details navigation.
+                    Explore our curated collection of high-quality products organized by category and subcategory.
                 </p>
             </div>
 
@@ -69,7 +66,6 @@
                             </span>
                             <div>
                                 <h2 class="text-2xl font-black text-slate-900 tracking-tight">{{ $cat->name }}</h2>
-                                <p class="text-xs text-slate-500 font-mono">Slug: /{{ $cat->slug }}</p>
                             </div>
                         </div>
                         <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
@@ -99,9 +95,6 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <span class="text-[11px] font-mono text-slate-400">
-                                        sub-slug: {{ $sub->slug }}
-                                    </span>
                                 </div>
 
                                 <!-- Product Grid for this Subcategory -->

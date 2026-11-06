@@ -85,7 +85,7 @@
                     </a>
 
                     <div class="pt-4 pb-1 px-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                        Requirement 4
+                        Public Store
                     </div>
 
                     <a href="{{ route('catalog.public') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ request()->routeIs('catalog.*') || request()->routeIs('home') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/40 font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">

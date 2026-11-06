@@ -86,7 +86,7 @@
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200/80 py-6 text-center text-xs text-slate-500">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>© {{ date('Y') }} Bangla Puzzle Limited Recruitment Assessment — Candidate: <strong>Md Naimul Hasan Naeem</strong></p>
+            <p>© {{ date('Y') }} Bangla Puzzle Store</p>
         </div>
     </footer>
 
