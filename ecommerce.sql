@@ -2,7 +2,7 @@
 -- E-commerce Platform Database Export
 -- Candidate: Md Naimul Hasan Naeem
 -- Bangla Puzzle Limited - Mid-Level Laravel Developer Assignment
--- Generated: 2026-11-06 15:58:15
+-- Generated: 2026-11-06 16:26:57
 -- ============================================================
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -17,6 +17,7 @@ CREATE TABLE `users` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `two_factor_secret` text COLLATE utf8mb4_unicode_ci,
@@ -30,8 +31,8 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table `users`
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`) VALUES ('1', 'Naimul Hasan', 'naimulhasan312005@gmail.com', '2026-11-06 13:12:24', '$2y$12$Sj.QOJOo7VcFFvjW5xCuX.GNUKrq1HwW9UhG31Hx1/DNr8qs5Mp/S', NULL, NULL, NULL, NULL, '2026-11-06 13:11:32', '2026-11-06 13:12:24');
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`) VALUES ('2', 'Md Naimul Hasan Naeem', 'admin@banglapuzzle.com', '2026-11-06 13:12:23', '$2y$12$3W6IQmO0x9s9kqU.WXXy2uy3kWMJuixjib5KZQvBcgAJB/8BevglO', NULL, NULL, NULL, 'Pye2VErKmPsIIiHnL5Nam67r5kWqer5DBoxKT1hU8k6mRuNSZLC7GzUegxWa', '2026-11-06 13:12:23', '2026-11-06 13:12:23');
+INSERT INTO `users` (`id`, `name`, `email`, `avatar`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`) VALUES ('1', 'Naimul Hasan', 'naimulhasan312005@gmail.com', NULL, '2026-11-06 13:12:24', '$2y$12$Sj.QOJOo7VcFFvjW5xCuX.GNUKrq1HwW9UhG31Hx1/DNr8qs5Mp/S', NULL, NULL, NULL, NULL, '2026-11-06 13:11:32', '2026-11-06 13:12:24');
+INSERT INTO `users` (`id`, `name`, `email`, `avatar`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`) VALUES ('2', 'Md Naimul Hasan Naeem', 'admin@banglapuzzle.com', NULL, '2026-11-06 13:12:23', '$2y$12$3W6IQmO0x9s9kqU.WXXy2uy3kWMJuixjib5KZQvBcgAJB/8BevglO', NULL, NULL, NULL, 'CmbQBwHZI65o1wL1YG22QmNyOA5qUmw84CvLwzhJk1gUb467kiLBgAu7kOeL', '2026-11-06 13:12:23', '2026-11-06 13:12:23');
 
 -- ------------------------------------------------------------
 -- Table structure for `categories`
@@ -50,8 +51,8 @@ CREATE TABLE `categories` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table `categories`
-INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `is_active`, `created_at`, `updated_at`) VALUES ('1', 'Smartphones & Gadgets', 'smartphones-gadgets', 'Flagship smartphones, smart wearables, and mobile lifestyle accessories.', '0', '2026-11-06 13:12:24', '2026-11-06 15:55:51');
-INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `is_active`, `created_at`, `updated_at`) VALUES ('2', 'Computers & Accessories', 'computers-accessories', 'High performance laptops, mechanical typing experiences, and gaming peripherals.', '1', '2026-11-06 13:12:24', '2026-11-06 13:12:24');
+INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `is_active`, `created_at`, `updated_at`) VALUES ('1', 'Smartphones & Gadgets', 'smartphones-gadgets', 'Flagship smartphones, smart wearables, and mobile lifestyle accessories.', '1', '2026-11-06 13:12:24', '2026-11-06 16:18:55');
+INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `is_active`, `created_at`, `updated_at`) VALUES ('2', 'Computers & Accessories', 'computers-accessories', 'High performance laptops, mechanical typing experiences, and gaming peripherals.', '1', '2026-11-06 13:12:24', '2026-11-06 16:01:06');
 INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `is_active`, `created_at`, `updated_at`) VALUES ('3', 'Audio & Entertainment', 'audio-entertainment', 'Audiophile headphones, noise-canceling wireless earbuds, and spatial sound.', '1', '2026-11-06 13:12:24', '2026-11-06 13:12:24');
 
 -- ------------------------------------------------------------
@@ -110,11 +111,11 @@ CREATE TABLE `products` (
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table `products`
-INSERT INTO `products` (`id`, `category_id`, `subcategory_id`, `name`, `slug`, `sku`, `description`, `image`, `old_price`, `new_price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('1', '1', '1', 'Apple iPhone 15 Pro Max 256GB', 'apple-iphone-15-pro-max-256gb', 'PRD-GVQDHK', 'Forged in titanium and featuring the groundbreaking A17 Pro chip, a customizable Action button, and the most powerful iPhone camera system ever with 5x optical zoom.', 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&auto=format&fit=crop&q=80', '175000.00', '159999.00', '15', '1', '2026-11-06 13:12:24', '2026-11-06 15:34:36');
+INSERT INTO `products` (`id`, `category_id`, `subcategory_id`, `name`, `slug`, `sku`, `description`, `image`, `old_price`, `new_price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('1', '1', '1', 'Apple iPhone 15 Pro Max 256GB', 'apple-iphone-15-pro-max-256gb', 'PRD-GVQDHK', 'Forged in titanium and featuring the groundbreaking A17 Pro chip, a customizable Action button, and the most powerful iPhone camera system ever with 5x optical zoom.', 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&auto=format&fit=crop&q=80', '175000.00', '159999.00', '15', '1', '2026-11-06 13:12:24', '2026-11-06 16:17:44');
 INSERT INTO `products` (`id`, `category_id`, `subcategory_id`, `name`, `slug`, `sku`, `description`, `image`, `old_price`, `new_price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('2', '1', '1', 'Samsung Galaxy S24 Ultra 5G', 'samsung-galaxy-s24-ultra-5g', 'PRD-UKWXS6', 'Galaxy AI is here. Meet Galaxy S24 Ultra, featuring a durable titanium exterior, built-in S Pen, and a 200MP camera system with advanced Nightography.', 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800&auto=format&fit=crop&q=80', '165000.00', '148500.00', '8', '1', '2026-11-06 13:12:24', '2026-11-06 15:34:36');
 INSERT INTO `products` (`id`, `category_id`, `subcategory_id`, `name`, `slug`, `sku`, `description`, `image`, `old_price`, `new_price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('3', '1', '1', 'Google Pixel 8 Pro', 'google-pixel-8-pro', 'PRD-UPJJKU', 'The engineered by Google phone with the next-gen Tensor G3 chip, best-in-class computational photography, and immersive 120Hz Super Actua display.', 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=800&auto=format&fit=crop&q=80', '115000.00', '98900.00', '4', '1', '2026-11-06 13:12:24', '2026-11-06 15:34:36');
 INSERT INTO `products` (`id`, `category_id`, `subcategory_id`, `name`, `slug`, `sku`, `description`, `image`, `old_price`, `new_price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('4', '1', '2', 'Apple Watch Ultra 2 Titanium', 'apple-watch-ultra-2-titanium', 'PRD-JLEXAL', 'The most rugged and capable Apple Watch. Features an ultra-bright display, precision dual-frequency GPS, and up to 36 hours of battery life.', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80', '95000.00', '84500.00', '6', '1', '2026-11-06 13:12:24', '2026-11-06 15:34:36');
-INSERT INTO `products` (`id`, `category_id`, `subcategory_id`, `name`, `slug`, `sku`, `description`, `image`, `old_price`, `new_price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('5', '1', '2', 'Samsung Galaxy Watch 6 Classic', 'samsung-galaxy-watch-6-classic', 'PRD-T1VIE6', 'Rotating bezel design with advanced sleep coaching, body composition analysis, and ECG heart rate tracking in a stainless steel casing.', 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&auto=format&fit=crop&q=80', '38000.00', '32500.00', '12', '1', '2026-11-06 13:12:24', '2026-11-06 15:34:36');
+INSERT INTO `products` (`id`, `category_id`, `subcategory_id`, `name`, `slug`, `sku`, `description`, `image`, `old_price`, `new_price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('5', '1', '2', 'Samsung Galaxy Watch 6 Classic', 'samsung-galaxy-watch-6-classic', 'PRD-T1VIE6', 'Rotating bezel design with advanced sleep coaching, body composition analysis, and ECG heart rate tracking in a stainless steel casing.', 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&auto=format&fit=crop&q=80', '38000.00', '32500.00', '12', '1', '2026-11-06 13:12:24', '2026-11-06 16:12:01');
 INSERT INTO `products` (`id`, `category_id`, `subcategory_id`, `name`, `slug`, `sku`, `description`, `image`, `old_price`, `new_price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('6', '2', '3', 'Apple MacBook Pro 16-inch M3 Max', 'apple-macbook-pro-16-inch-m3-max', 'PRD-E2J3Y4', 'Unbelievable pro performance featuring the M3 Max chip with 16-core CPU, 40-core GPU, Liquid Retina XDR display, and up to 22 hours of battery life.', 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80', '385000.00', '349000.00', '7', '1', '2026-11-06 13:12:24', '2026-11-06 15:34:36');
 INSERT INTO `products` (`id`, `category_id`, `subcategory_id`, `name`, `slug`, `sku`, `description`, `image`, `old_price`, `new_price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('7', '2', '3', 'Dell XPS 15 OLED InfinityEdge', 'dell-xps-15-oled-infinityedge', 'PRD-JZ9MIR', 'Stunning 3.5K OLED touchscreen display powered by Intel Core i9 13th Gen with NVIDIA GeForce RTX 4070 graphics in CNC machined aluminum.', 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&auto=format&fit=crop&q=80', '265000.00', '238000.00', '5', '1', '2026-11-06 13:12:24', '2026-11-06 15:34:36');
 INSERT INTO `products` (`id`, `category_id`, `subcategory_id`, `name`, `slug`, `sku`, `description`, `image`, `old_price`, `new_price`, `stock_quantity`, `is_active`, `created_at`, `updated_at`) VALUES ('8', '2', '3', 'ASUS ROG Zephyrus G14 Gaming Laptop', 'asus-rog-zephyrus-g14-gaming-laptop', 'PRD-JFKXUH', 'Compact 14-inch gaming beast with AMD Ryzen 9, ROG Nebula Display with 165Hz refresh rate, and AniMe Matrix LED lid customization.', 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800&auto=format&fit=crop&q=80', '210000.00', '189999.00', '3', '1', '2026-11-06 13:12:24', '2026-11-06 15:34:36');
@@ -211,7 +212,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table `migrations`
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES ('1', '0001_01_01_000000_create_users_table', '1');
@@ -222,5 +223,6 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES ('5', '2025_08_14_1
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES ('6', '2026_11_06_130451_create_ecommerce_tables', '2');
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES ('7', '2026_11_06_151212_add_stock_gallery_and_variants_to_products', '3');
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES ('8', '2026_11_06_152855_add_image_to_product_variants_table', '4');
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES ('9', '2026_11_06_162325_add_avatar_to_users_table', '5');
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -163,6 +163,15 @@
                     </a>
 
                     <div class="pt-4 pb-1 px-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                        Administration
+                    </div>
+
+                    <a href="{{ route('admin.profile.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ request()->routeIs('admin.profile.*') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/40 font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-800/60' }}">
+                        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        <span>Profile Settings</span>
+                    </a>
+
+                    <div class="pt-4 pb-1 px-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">
                         Public Store
                     </div>
 
@@ -176,15 +185,13 @@
             <!-- User Info & Logout -->
             <div class="p-4 border-t border-slate-800/80 bg-slate-950/40">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2.5 min-w-0">
-                        <div class="size-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs uppercase shrink-0 border border-indigo-500/30">
-                            {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
-                        </div>
+                    <a href="{{ route('admin.profile.index') }}" class="flex items-center gap-2.5 min-w-0 group cursor-pointer hover:opacity-90 transition" title="Edit Profile">
+                        <img src="{{ auth()->user()?->avatar_url ?? 'https://ui-avatars.com/api/?name=Admin' }}" alt="Avatar" class="size-8 rounded-full object-cover border border-indigo-500/40 shrink-0">
                         <div class="truncate text-xs">
-                            <p class="font-semibold text-white truncate">{{ auth()->user()->name ?? 'Administrator' }}</p>
+                            <p class="font-semibold text-white truncate group-hover:text-indigo-400 transition">{{ auth()->user()->name ?? 'Administrator' }}</p>
                             <p class="text-slate-400 text-[10px] truncate">{{ auth()->user()->email ?? 'admin@banglapuzzle.com' }}</p>
                         </div>
-                    </div>
+                    </a>
                     <form method="POST" action="{{ route('logout') }}" class="shrink-0">
                         @csrf
                         <button type="submit" title="Logout" class="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition">
@@ -213,6 +220,10 @@
                     <a href="{{ route('admin.products.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition shadow-sm shadow-indigo-600/30">
                         <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         <span>Add Product</span>
+                    </a>
+                    <a href="{{ route('admin.profile.index') }}" class="flex items-center gap-2 p-1 pl-2 pr-3 text-xs font-semibold rounded-lg border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 transition shadow-xs" title="Profile Settings">
+                        <img src="{{ auth()->user()?->avatar_url ?? 'https://ui-avatars.com/api/?name=Admin' }}" alt="Profile" class="size-6 rounded-full object-cover">
+                        <span class="hidden md:inline">{{ auth()->user()?->name ?? 'Admin' }}</span>
                     </a>
                 </div>
             </header>
