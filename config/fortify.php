@@ -161,7 +161,7 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        // Features::registration(), // Disabled: Registration is closed for admin-only security
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([

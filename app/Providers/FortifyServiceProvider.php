@@ -46,7 +46,6 @@ class FortifyServiceProvider extends ServiceProvider
     private function configureViews(): void
     {
         Fortify::loginView(fn () => view('auth.login'));
-        Fortify::registerView(fn () => view('auth.register'));
         Fortify::resetPasswordView(fn () => view('auth.login'));
         Fortify::requestPasswordResetLinkView(fn () => view('auth.login'));
         Fortify::verifyEmailView(fn () => view('auth.login'));
