@@ -65,6 +65,7 @@ class ProductRequest extends FormRequest
             'variants.*.id' => ['nullable', 'integer'],
             'variants.*.attribute_name' => ['required_with:variants', 'string', 'max:100'],
             'variants.*.attribute_value' => ['required_with:variants', 'string', 'max:100'],
+            'variants.*.image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:5120'],
             'variants.*.sku' => ['nullable', 'string', 'max:100'],
             'variants.*.price' => ['nullable', 'numeric', 'min:0'],
             'variants.*.stock_quantity' => ['nullable', 'integer', 'min:0'],

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductVariant extends Model
 {
@@ -14,6 +16,7 @@ class ProductVariant extends Model
         'product_id',
         'attribute_name',
         'attribute_value',
+        'image',
         'sku',
         'price',
         'stock_quantity',
@@ -28,6 +31,29 @@ class ProductVariant extends Model
         'stock_quantity' => 'integer',
         'is_active' => 'boolean',
     ];
+
+    /**
+     * @var list<string>
+     */
+    protected $appends = [
+        'image_url',
+    ];
+
+    /**
+     * Accessor for full variant image URL.
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if (empty($this->image)) {
+            return null;
+        }
+
+        if (Str::startsWith($this->image, ['http://', 'https://'])) {
+            return $this->image;
+        }
+
+        return Storage::disk('public')->url($this->image);
+    }
 
     /**
      * Get the product that owns this variant.

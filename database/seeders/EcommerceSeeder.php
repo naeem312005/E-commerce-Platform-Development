@@ -51,9 +51,9 @@ class EcommerceSeeder extends Seeder
                                     'https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=800&auto=format&fit=crop&q=80',
                                 ],
                                 'variants' => [
-                                    ['attribute_name' => 'Color', 'attribute_value' => 'Natural Titanium', 'price' => null, 'stock_quantity' => 5],
-                                    ['attribute_name' => 'Color', 'attribute_value' => 'Blue Titanium', 'price' => null, 'stock_quantity' => 6],
-                                    ['attribute_name' => 'Color', 'attribute_value' => 'Black Titanium', 'price' => null, 'stock_quantity' => 4],
+                                    ['attribute_name' => 'Color', 'attribute_value' => 'Natural Titanium', 'image' => 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&auto=format&fit=crop&q=80', 'price' => null, 'stock_quantity' => 5],
+                                    ['attribute_name' => 'Color', 'attribute_value' => 'Blue Titanium', 'image' => 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=800&auto=format&fit=crop&q=80', 'price' => null, 'stock_quantity' => 6],
+                                    ['attribute_name' => 'Color', 'attribute_value' => 'Black Titanium', 'image' => 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=800&auto=format&fit=crop&q=80', 'price' => null, 'stock_quantity' => 4],
                                     ['attribute_name' => 'Storage', 'attribute_value' => '256 GB', 'price' => 159999.00, 'stock_quantity' => 8],
                                     ['attribute_name' => 'Storage', 'attribute_value' => '512 GB', 'price' => 178500.00, 'stock_quantity' => 5],
                                     ['attribute_name' => 'Storage', 'attribute_value' => '1 TB', 'price' => 199000.00, 'stock_quantity' => 2],
@@ -71,8 +71,8 @@ class EcommerceSeeder extends Seeder
                                     'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&auto=format&fit=crop&q=80',
                                 ],
                                 'variants' => [
-                                    ['attribute_name' => 'Color', 'attribute_value' => 'Titanium Gray', 'price' => null, 'stock_quantity' => 4],
-                                    ['attribute_name' => 'Color', 'attribute_value' => 'Titanium Violet', 'price' => null, 'stock_quantity' => 4],
+                                    ['attribute_name' => 'Color', 'attribute_value' => 'Titanium Gray', 'image' => 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800&auto=format&fit=crop&q=80', 'price' => null, 'stock_quantity' => 4],
+                                    ['attribute_name' => 'Color', 'attribute_value' => 'Titanium Violet', 'image' => 'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=800&auto=format&fit=crop&q=80', 'price' => null, 'stock_quantity' => 4],
                                     ['attribute_name' => 'Storage', 'attribute_value' => '256 GB', 'price' => 148500.00, 'stock_quantity' => 5],
                                     ['attribute_name' => 'Storage', 'attribute_value' => '512 GB', 'price' => 164000.00, 'stock_quantity' => 3],
                                 ],
@@ -218,8 +218,8 @@ class EcommerceSeeder extends Seeder
                                     'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800&auto=format&fit=crop&q=80',
                                 ],
                                 'variants' => [
-                                    ['attribute_name' => 'Color', 'attribute_value' => 'Black', 'price' => null, 'stock_quantity' => 6],
-                                    ['attribute_name' => 'Color', 'attribute_value' => 'Silver', 'price' => null, 'stock_quantity' => 5],
+                                    ['attribute_name' => 'Color', 'attribute_value' => 'Black', 'image' => 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80', 'price' => null, 'stock_quantity' => 6],
+                                    ['attribute_name' => 'Color', 'attribute_value' => 'Silver', 'image' => 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800&auto=format&fit=crop&q=80', 'price' => null, 'stock_quantity' => 5],
                                 ],
                             ],
                             [
@@ -315,6 +315,7 @@ class EcommerceSeeder extends Seeder
                             $product->variants()->create([
                                 'attribute_name' => $v['attribute_name'],
                                 'attribute_value' => $v['attribute_value'],
+                                'image' => $v['image'] ?? null,
                                 'sku' => $product->sku.'-'.strtoupper(Str::slug($v['attribute_value'])),
                                 'price' => $v['price'] ?? null,
                                 'stock_quantity' => $v['stock_quantity'],

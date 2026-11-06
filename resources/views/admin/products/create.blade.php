@@ -412,17 +412,20 @@
         row.className = 'grid grid-cols-1 sm:grid-cols-12 gap-2 items-center bg-white p-3 rounded-xl border border-slate-200 shadow-2xs';
 
         row.innerHTML = `
+            <div class="sm:col-span-2">
+                <input type="text" name="variants[${idx}][attribute_name]" value="${data.attribute_name || 'Color'}" placeholder="Type (e.g. Color)" required class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-purple-600">
+            </div>
             <div class="sm:col-span-3">
-                <input type="text" name="variants[${idx}][attribute_name]" value="${data.attribute_name || 'Color'}" placeholder="Type (e.g. Color, Size)" required class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-purple-600">
+                <input type="text" name="variants[${idx}][attribute_value]" value="${data.attribute_value || ''}" placeholder="Option (e.g. Blue Titanium)" required class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-purple-600">
             </div>
-            <div class="sm:col-span-4">
-                <input type="text" name="variants[${idx}][attribute_value]" value="${data.attribute_value || ''}" placeholder="Option (e.g. Space Gray, 256GB)" required class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-purple-600">
-            </div>
-            <div class="sm:col-span-2">
-                <input type="number" step="0.01" name="variants[${idx}][price]" value="${data.price || ''}" placeholder="Price (৳) (opt)" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-purple-600">
+            <div class="sm:col-span-3 flex items-center gap-1.5">
+                <input type="file" name="variants[${idx}][image]" accept="image/*" title="Optional Variant Photo" class="w-full text-[10px] text-slate-500 file:mr-1.5 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 cursor-pointer">
             </div>
             <div class="sm:col-span-2">
-                <input type="number" min="0" name="variants[${idx}][stock_quantity]" value="${data.stock_quantity ?? 5}" placeholder="Stock" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-purple-600">
+                <input type="number" step="0.01" name="variants[${idx}][price]" value="${data.price || ''}" placeholder="Price (৳)" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-purple-600">
+            </div>
+            <div class="sm:col-span-1">
+                <input type="number" min="0" name="variants[${idx}][stock_quantity]" value="${data.stock_quantity ?? 5}" placeholder="Qty" title="Stock Quantity" class="w-full rounded-lg border border-slate-300 px-2 py-1.5 text-xs text-slate-800 outline-none focus:border-purple-600">
             </div>
             <div class="sm:col-span-1 text-right">
                 <button type="button" onclick="removeVariantRow(${idx})" class="p-1.5 text-slate-400 hover:text-red-600 transition" title="Remove variant">

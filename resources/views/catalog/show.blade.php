@@ -132,9 +132,12 @@
                                     @foreach($variantGroup as $vIdx => $v)
                                         <button
                                             type="button"
-                                            onclick="selectVariant('{{ Str::slug($attrName) }}', {{ $v->price ? $v->price : 'null' }}, this)"
-                                            class="variant-btn-{{ Str::slug($attrName) }} px-3.5 py-2 rounded-xl text-xs font-semibold border transition {{ $vIdx === 0 ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:border-slate-400' }}"
+                                            onclick="selectVariant('{{ Str::slug($attrName) }}', {{ $v->price ? $v->price : 'null' }}, '{{ $v->image_url ?? '' }}', this)"
+                                            class="variant-btn-{{ Str::slug($attrName) }} inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition {{ $vIdx === 0 ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:border-slate-400' }}"
                                         >
+                                            @if($v->image_url)
+                                                <img src="{{ $v->image_url }}" alt="{{ $v->attribute_value }}" class="size-4 rounded-full object-cover border border-white/50 shrink-0">
+                                            @endif
                                             <span>{{ $v->attribute_value }}</span>
                                             @if($v->price && $v->price != $product->new_price)
                                                 <span class="text-[10px] opacity-80">(৳{{ number_format($v->price, 0) }})</span>
@@ -252,7 +255,7 @@
         buttonElement.classList.add('border-indigo-600', 'opacity-100');
     }
 
-    function selectVariant(groupSlug, price, buttonElement) {
+    function selectVariant(groupSlug, price, imageUrl, buttonElement) {
         document.querySelectorAll(`.variant-btn-${groupSlug}`).forEach(btn => {
             btn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600', 'shadow-xs');
             btn.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
@@ -260,6 +263,16 @@
 
         buttonElement.classList.remove('bg-white', 'text-slate-700', 'border-slate-200');
         buttonElement.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600', 'shadow-xs');
+
+        // Swap main image if variant has its own image
+        if (imageUrl && imageUrl !== '') {
+            const mainImg = document.getElementById('mainProductImage');
+            mainImg.style.opacity = '0.3';
+            setTimeout(() => {
+                mainImg.src = imageUrl;
+                mainImg.style.opacity = '1';
+            }, 150);
+        }
 
         if (price !== null && !isNaN(price)) {
             document.getElementById('displayPrice').innerText = '৳' + parseFloat(price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

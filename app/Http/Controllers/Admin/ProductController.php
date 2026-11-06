@@ -102,11 +102,17 @@ class ProductController extends Controller
 
             // Handle variants
             if ($request->filled('variants') && is_array($request->input('variants'))) {
-                foreach ($request->input('variants') as $variantData) {
+                foreach ($request->input('variants') as $idx => $variantData) {
                     if (! empty($variantData['attribute_name']) && ! empty($variantData['attribute_value'])) {
+                        $variantImage = null;
+                        if ($request->hasFile("variants.{$idx}.image")) {
+                            $variantImage = $request->file("variants.{$idx}.image")->store('products/variants', 'public');
+                        }
+
                         $product->variants()->create([
                             'attribute_name' => $variantData['attribute_name'],
                             'attribute_value' => $variantData['attribute_value'],
+                            'image' => $variantImage,
                             'sku' => ! empty($variantData['sku']) ? $variantData['sku'] : null,
                             'price' => isset($variantData['price']) && $variantData['price'] !== '' ? $variantData['price'] : null,
                             'stock_quantity' => isset($variantData['stock_quantity']) && $variantData['stock_quantity'] !== '' ? (int) $variantData['stock_quantity'] : 0,
@@ -189,7 +195,7 @@ class ProductController extends Controller
                 $incomingVariants = (array) $request->input('variants');
                 $submittedIds = [];
 
-                foreach ($incomingVariants as $variantData) {
+                foreach ($incomingVariants as $idx => $variantData) {
                     if (empty($variantData['attribute_name']) || empty($variantData['attribute_value'])) {
                         continue;
                     }
@@ -203,9 +209,16 @@ class ProductController extends Controller
                         'is_active' => ! empty($variantData['is_active']),
                     ];
 
+                    if ($request->hasFile("variants.{$idx}.image")) {
+                        $variantPayload['image'] = $request->file("variants.{$idx}.image")->store('products/variants', 'public');
+                    }
+
                     if (! empty($variantData['id'])) {
                         $variant = $product->variants()->find($variantData['id']);
                         if ($variant instanceof ProductVariant) {
+                            if (isset($variantPayload['image']) && $variant->image && ! str_starts_with($variant->image, 'http') && Storage::disk('public')->exists($variant->image)) {
+                                Storage::disk('public')->delete($variant->image);
+                            }
                             $variant->update($variantPayload);
                             $submittedIds[] = $variant->id;
 
@@ -218,8 +231,19 @@ class ProductController extends Controller
                 }
 
                 // Delete variants that were removed
-                $product->variants()->whereNotIn('id', $submittedIds)->delete();
+                $variantsToDelete = $product->variants()->whereNotIn('id', $submittedIds)->get();
+                foreach ($variantsToDelete as $vDel) {
+                    if ($vDel->image && ! str_starts_with($vDel->image, 'http') && Storage::disk('public')->exists($vDel->image)) {
+                        Storage::disk('public')->delete($vDel->image);
+                    }
+                    $vDel->delete();
+                }
             } else {
+                foreach ($product->variants as $vDel) {
+                    if ($vDel->image && ! str_starts_with($vDel->image, 'http') && Storage::disk('public')->exists($vDel->image)) {
+                        Storage::disk('public')->delete($vDel->image);
+                    }
+                }
                 $product->variants()->delete();
             }
         });
@@ -239,6 +263,12 @@ class ProductController extends Controller
         foreach ($product->images as $img) {
             if ($img->image && ! str_starts_with($img->image, 'http') && Storage::disk('public')->exists($img->image)) {
                 Storage::disk('public')->delete($img->image);
+            }
+        }
+
+        foreach ($product->variants as $variant) {
+            if ($variant->image && ! str_starts_with($variant->image, 'http') && Storage::disk('public')->exists($variant->image)) {
+                Storage::disk('public')->delete($variant->image);
             }
         }
 

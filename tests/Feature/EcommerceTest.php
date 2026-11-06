@@ -194,6 +194,7 @@ class EcommerceTest extends TestCase
         $image = UploadedFile::fake()->image('cover.jpg');
         $gallery1 = UploadedFile::fake()->image('angle1.jpg');
         $gallery2 = UploadedFile::fake()->image('angle2.jpg');
+        $variantImg = UploadedFile::fake()->image('porcelain.jpg');
 
         $response = $this->actingAs($this->user)->post(route('admin.products.store'), [
             'category_id' => $category->id,
@@ -203,7 +204,7 @@ class EcommerceTest extends TestCase
             'image' => $image,
             'gallery' => [$gallery1, $gallery2],
             'variants' => [
-                ['attribute_name' => 'Color', 'attribute_value' => 'Porcelain', 'price' => null, 'stock_quantity' => 10],
+                ['attribute_name' => 'Color', 'attribute_value' => 'Porcelain', 'image' => $variantImg, 'price' => null, 'stock_quantity' => 10],
                 ['attribute_name' => 'Color', 'attribute_value' => 'Obsidian', 'price' => null, 'stock_quantity' => 8],
                 ['attribute_name' => 'Storage', 'attribute_value' => '512GB', 'price' => 189000, 'stock_quantity' => 5],
             ],
@@ -221,5 +222,10 @@ class EcommerceTest extends TestCase
         $this->assertEquals('in_stock', $product->stock_status);
         $this->assertCount(2, $product->images);
         $this->assertCount(3, $product->variants);
+
+        $porcelain = $product->variants->firstWhere('attribute_value', 'Porcelain');
+        $this->assertNotNull($porcelain);
+        $this->assertNotNull($porcelain->image);
+        Storage::disk('public')->assertExists($porcelain->image);
     }
 }
