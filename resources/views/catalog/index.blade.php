@@ -90,14 +90,28 @@
                                         <div class="group flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 transition duration-200">
                                             <!-- Product Image Container -->
                                             <div class="relative aspect-square w-full overflow-hidden bg-slate-100">
-                                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="size-full object-cover group-hover:scale-105 transition duration-300">
+                                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="size-full object-cover group-hover:scale-105 transition duration-300 {{ $product->stock_status === 'out_of_stock' ? 'opacity-85' : '' }}">
 
-                                                <!-- Discount Pill -->
-                                                @if($product->discount_percentage > 0)
-                                                    <span class="absolute top-2.5 left-2.5 rounded-full bg-red-600 px-2.5 py-0.5 text-[10px] font-black text-white shadow-xs">
-                                                        -{{ $product->discount_percentage }}% OFF
-                                                    </span>
-                                                @endif
+                                                <!-- Top Badges (Discount + Stock) -->
+                                                <div class="absolute top-2.5 inset-x-2.5 flex items-center justify-between gap-1.5 pointer-events-none">
+                                                    @if($product->discount_percentage > 0)
+                                                        <span class="rounded-full bg-red-600 px-2.5 py-0.5 text-[10px] font-black text-white shadow-xs">
+                                                            -{{ $product->discount_percentage }}% OFF
+                                                        </span>
+                                                    @else
+                                                        <span></span>
+                                                    @endif
+
+                                                    @if($product->stock_status === 'out_of_stock')
+                                                        <span class="rounded-full bg-rose-600/95 backdrop-blur-xs px-2.5 py-0.5 text-[10px] font-bold text-white shadow-xs whitespace-nowrap">
+                                                            Out of Stock
+                                                        </span>
+                                                    @elseif($product->stock_status === 'low_stock')
+                                                        <span class="rounded-full bg-amber-500/95 backdrop-blur-xs px-2.5 py-0.5 text-[10px] font-bold text-white shadow-xs whitespace-nowrap">
+                                                            Low Stock ({{ $product->stock_quantity }})
+                                                        </span>
+                                                    @endif
+                                                </div>
 
                                                 <!-- SKU Badge -->
                                                 <span class="absolute bottom-2.5 right-2.5 rounded bg-black/75 backdrop-blur-xs px-2 py-0.5 text-[10px] font-mono text-white">
@@ -108,6 +122,27 @@
                                             <!-- Content & Pricing -->
                                             <div class="p-4 flex flex-col flex-1 justify-between gap-3">
                                                 <div>
+                                                    <!-- Category Tag & Stock Status Row -->
+                                                    <div class="flex items-center justify-between gap-2 mb-1.5">
+                                                        <span class="text-[11px] font-semibold text-indigo-600 bg-indigo-50/80 px-2 py-0.5 rounded-md truncate max-w-[120px]">
+                                                            {{ $product->subcategory->name ?? $product->category->name }}
+                                                        </span>
+
+                                                        @if($product->stock_status === 'out_of_stock')
+                                                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-red-600 whitespace-nowrap shrink-0">
+                                                                <span class="size-1.5 rounded-full bg-red-500"></span> Out of Stock
+                                                            </span>
+                                                        @elseif($product->stock_status === 'low_stock')
+                                                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-600 whitespace-nowrap shrink-0">
+                                                                <span class="size-1.5 rounded-full bg-amber-500 animate-pulse"></span> Low Stock
+                                                            </span>
+                                                        @else
+                                                            <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600 whitespace-nowrap shrink-0">
+                                                                <span class="size-1.5 rounded-full bg-emerald-500"></span> In Stock
+                                                            </span>
+                                                        @endif
+                                                    </div>
+
                                                     <h4 class="font-bold text-slate-900 text-sm line-clamp-1 group-hover:text-indigo-600 transition leading-snug">
                                                         {{ $product->name }}
                                                     </h4>
@@ -117,25 +152,14 @@
                                                 </div>
 
                                                 <div class="pt-3 border-t border-slate-100">
-                                                    <div class="flex items-baseline justify-between mb-3">
-                                                        <div class="flex items-baseline gap-1.5">
-                                                            <span class="text-lg font-black text-emerald-600">
-                                                                ৳{{ number_format($product->new_price, 2) }}
-                                                            </span>
-                                                            @if($product->old_price > $product->new_price)
-                                                                <span class="text-xs text-slate-400 line-through">
-                                                                    ৳{{ number_format($product->old_price, 2) }}
-                                                                </span>
-                                                            @endif
-                                                        </div>
-
-                                                        @if($product->stock_status === 'out_of_stock')
-                                                            <span class="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
-                                                                Out of Stock
-                                                            </span>
-                                                        @elseif($product->stock_status === 'low_stock')
-                                                            <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
-                                                                Low Stock ({{ $product->stock_quantity }})
+                                                    <!-- Dedicated Price Row (Spacious & Clean) -->
+                                                    <div class="flex items-baseline gap-2 mb-3">
+                                                        <span class="text-xl font-black text-emerald-600">
+                                                            ৳{{ number_format($product->new_price, 2) }}
+                                                        </span>
+                                                        @if($product->old_price > $product->new_price)
+                                                            <span class="text-xs text-slate-400 line-through">
+                                                                ৳{{ number_format($product->old_price, 2) }}
                                                             </span>
                                                         @endif
                                                     </div>
