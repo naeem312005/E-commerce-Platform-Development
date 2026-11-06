@@ -39,8 +39,33 @@
         @vite(['resources/css/app.css'])
     @endif
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        /* SweetAlert2 Custom Styling */
+        .swal2-popup {
+            border-radius: 1.25rem !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+        }
+        .swal2-title {
+            font-size: 1.15rem !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+        }
+        .swal2-html-container {
+            font-size: 0.8125rem !important;
+            color: #475569 !important;
+        }
+        .swal2-toast {
+            border-radius: 1rem !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid #e2e8f0 !important;
+            padding: 0.75rem 1rem !important;
+        }
+
         .switch-track {
             position: relative;
             display: inline-block;
@@ -213,6 +238,20 @@
     </div>
 
     <script>
+        // Global SweetAlert2 Toast configuration
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        window.Toast = Toast;
+
         async function toggleStatus(url, buttonElement, activeText = 'Active', inactiveText = 'Inactive') {
             buttonElement.disabled = true;
             const track = buttonElement.querySelector('.switch-track') || buttonElement.querySelector('.toggle-track');
@@ -247,17 +286,61 @@
                             label.classList.add('text-slate-400');
                         }
                     }
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: data.message || ('Status updated to ' + (data.is_active ? activeText : inactiveText))
+                    });
                 } else {
-                    alert(data.message || 'Failed to update status.');
+                    Toast.fire({
+                        icon: 'error',
+                        title: data.message || 'Failed to update status.'
+                    });
                 }
             } catch (error) {
                 console.error('Toggle error:', error);
-                alert('An error occurred while updating status.');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'An error occurred while updating status.'
+                });
             } finally {
                 buttonElement.disabled = false;
             }
         }
     </script>
+
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Toast.fire({
+                    icon: 'success',
+                    title: "{{ addslashes(session('success')) }}"
+                });
+            });
+        </script>
+    @endif
+
+    @if(session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Toast.fire({
+                    icon: 'error',
+                    title: "{{ addslashes(session('error')) }}"
+                });
+            });
+        </script>
+    @endif
+
+    @if($errors->any())
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Toast.fire({
+                    icon: 'warning',
+                    title: "{{ addslashes($errors->first()) }}"
+                });
+            });
+        </script>
+    @endif
 
     @stack('scripts')
 </body>

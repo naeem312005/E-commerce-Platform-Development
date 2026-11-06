@@ -266,13 +266,37 @@
     }
 
     function openDeleteModal(id, name, prodCount) {
-        document.getElementById('deleteForm').action = '/admin/subcategories/' + id;
-        document.getElementById('delete_sub_name').innerText = name;
-        document.getElementById('delete_prod_count').innerText = prodCount;
-        document.getElementById('deleteModal').classList.remove('hidden');
-    }
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').classList.add('hidden');
+        Swal.fire({
+            title: 'Delete Subcategory?',
+            html: `<p class="text-xs text-slate-600 mb-3">Are you sure you want to permanently delete <strong>"${name}"</strong>?</p>
+                   <div class="rounded-xl bg-red-50 border border-red-200 p-3 text-xs text-red-700 text-left space-y-1">
+                       <p class="font-bold text-red-800">⚠️ Data Integrity Notice:</p>
+                       <p>This action will cascade delete all <strong>${prodCount}</strong> products assigned to it.</p>
+                   </div>`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Yes, delete subcategory',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            customClass: {
+                confirmButton: 'px-4 py-2.5 rounded-xl font-bold text-xs',
+                cancelButton: 'px-4 py-2.5 rounded-xl font-semibold text-xs'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/admin/subcategories/' + id;
+                form.innerHTML = `
+                    <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                    <input type="hidden" name="_method" value="DELETE">
+                `;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
     }
 </script>
 @endpush

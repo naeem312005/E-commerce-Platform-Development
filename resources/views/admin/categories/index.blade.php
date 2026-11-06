@@ -246,14 +246,37 @@
     }
 
     function openDeleteModal(id, name, subCount, prodCount) {
-        document.getElementById('deleteForm').action = '/admin/categories/' + id;
-        document.getElementById('delete_cat_name').innerText = name;
-        document.getElementById('delete_sub_count').innerText = subCount;
-        document.getElementById('delete_prod_count').innerText = prodCount;
-        document.getElementById('deleteModal').classList.remove('hidden');
-    }
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').classList.add('hidden');
+        Swal.fire({
+            title: 'Delete Category?',
+            html: `<p class="text-xs text-slate-600 mb-3">Are you sure you want to permanently delete <strong>"${name}"</strong>?</p>
+                   <div class="rounded-xl bg-red-50 border border-red-200 p-3 text-xs text-red-700 text-left space-y-1">
+                       <p class="font-bold text-red-800">⚠️ Data Integrity Notice:</p>
+                       <p>This action will cascade delete <strong>${subCount}</strong> subcategories and <strong>${prodCount}</strong> products.</p>
+                   </div>`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Yes, delete category',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            customClass: {
+                confirmButton: 'px-4 py-2.5 rounded-xl font-bold text-xs',
+                cancelButton: 'px-4 py-2.5 rounded-xl font-semibold text-xs'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/admin/categories/' + id;
+                form.innerHTML = `
+                    <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                    <input type="hidden" name="_method" value="DELETE">
+                `;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
     }
 </script>
 @endpush

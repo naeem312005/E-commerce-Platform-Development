@@ -39,8 +39,21 @@
         @vite(['resources/css/app.css'])
     @endif
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .swal2-popup {
+            border-radius: 1.25rem !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+        }
+        .swal2-toast {
+            border-radius: 1rem !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid #e2e8f0 !important;
+            padding: 0.75rem 1rem !important;
+        }
     </style>
 </head>
 <body class="h-full antialiased text-slate-800 flex flex-col justify-between">
@@ -85,6 +98,43 @@
             <p>© {{ date('Y') }} Bangla Puzzle Store</p>
         </div>
     </footer>
+
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        window.Toast = Toast;
+    </script>
+
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Toast.fire({
+                    icon: 'success',
+                    title: "{{ addslashes(session('success')) }}"
+                });
+            });
+        </script>
+    @endif
+
+    @if(session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Toast.fire({
+                    icon: 'error',
+                    title: "{{ addslashes(session('error')) }}"
+                });
+            });
+        </script>
+    @endif
 
     @stack('scripts')
 </body>

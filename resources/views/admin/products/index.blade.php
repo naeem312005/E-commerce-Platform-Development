@@ -251,12 +251,37 @@
 @push('scripts')
 <script>
     function openDeleteModal(id, name) {
-        document.getElementById('deleteForm').action = '/admin/products/' + id;
-        document.getElementById('delete_prod_name').innerText = name;
-        document.getElementById('deleteModal').classList.remove('hidden');
-    }
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').classList.add('hidden');
+        Swal.fire({
+            title: 'Delete Product?',
+            html: `<p class="text-xs text-slate-600 mb-3">Are you sure you want to permanently delete <strong>"${name}"</strong>?</p>
+                   <div class="rounded-xl bg-amber-50 border border-amber-200 p-3 text-xs text-amber-800 text-left space-y-1">
+                       <p class="font-bold text-amber-900">⚠️ Media & Variant Notice:</p>
+                       <p>This action will permanently delete this product, all gallery photos, and all variant configurations.</p>
+                   </div>`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Yes, delete product',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            customClass: {
+                confirmButton: 'px-4 py-2.5 rounded-xl font-bold text-xs',
+                cancelButton: 'px-4 py-2.5 rounded-xl font-semibold text-xs'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/admin/products/' + id;
+                form.innerHTML = `
+                    <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                    <input type="hidden" name="_method" value="DELETE">
+                `;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
     }
 </script>
 @endpush
