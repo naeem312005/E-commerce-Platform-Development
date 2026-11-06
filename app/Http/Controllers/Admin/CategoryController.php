@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Throwable;
 
 class CategoryController extends Controller
 {
@@ -15,11 +18,19 @@ class CategoryController extends Controller
      */
     public function index(): View
     {
-        $categories = Category::withCount(['subcategories', 'products'])
-            ->latest()
-            ->paginate(15);
+        try {
+            $categories = Category::withCount(['subcategories', 'products'])
+                ->latest()
+                ->paginate(15);
 
-        return view('admin.categories.index', compact('categories'));
+            return view('admin.categories.index', compact('categories'));
+        } catch (Throwable $e) {
+            Log::error('Error loading categories list: '.$e->getMessage(), ['exception' => $e]);
+
+            return view('admin.categories.index', [
+                'categories' => Category::whereRaw('1 = 0')->paginate(15),
+            ])->with('error', 'Unable to retrieve categories at this moment.');
+        }
     }
 
     /**
@@ -28,11 +39,22 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        $validated['slug'] = Category::generateUniqueSlug($validated['name']);
 
-        Category::create($validated);
+        try {
+            DB::transaction(function () use ($validated) {
+                $validated['slug'] = Category::generateUniqueSlug($validated['name']);
+                Category::create($validated);
+            });
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category created successfully!');
+            return redirect()->route('admin.categories.index')->with('success', 'Category created successfully!');
+        } catch (Throwable $e) {
+            Log::error('Failed to create category: '.$e->getMessage(), [
+                'request' => $request->except(['_token']),
+                'exception' => $e,
+            ]);
+
+            return back()->withInput()->with('error', 'Failed to create category. Please try again.');
+        }
     }
 
     /**
@@ -42,13 +64,24 @@ class CategoryController extends Controller
     {
         $validated = $request->validated();
 
-        if ($category->name !== $validated['name']) {
-            $validated['slug'] = Category::generateUniqueSlug($validated['name'], $category->id);
+        try {
+            DB::transaction(function () use ($category, $validated) {
+                if ($category->name !== $validated['name']) {
+                    $validated['slug'] = Category::generateUniqueSlug($validated['name'], $category->id);
+                }
+
+                $category->update($validated);
+            });
+
+            return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully!');
+        } catch (Throwable $e) {
+            Log::error('Failed to update category #'.$category->id.': '.$e->getMessage(), [
+                'request' => $request->except(['_token']),
+                'exception' => $e,
+            ]);
+
+            return back()->withInput()->with('error', 'Failed to update category. Please try again.');
         }
-
-        $category->update($validated);
-
-        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully!');
     }
 
     /**
@@ -56,8 +89,16 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category): RedirectResponse
     {
-        $category->delete();
+        try {
+            DB::transaction(function () use ($category) {
+                $category->delete();
+            });
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully!');
+            return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully!');
+        } catch (Throwable $e) {
+            Log::error('Failed to delete category #'.$category->id.': '.$e->getMessage(), ['exception' => $e]);
+
+            return back()->with('error', 'Failed to delete category. Ensure there are no dependent records blocking this action.');
+        }
     }
 }

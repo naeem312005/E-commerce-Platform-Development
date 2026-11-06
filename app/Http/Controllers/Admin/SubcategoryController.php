@@ -8,7 +8,10 @@ use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Throwable;
 
 class SubcategoryController extends Controller
 {
@@ -17,14 +20,23 @@ class SubcategoryController extends Controller
      */
     public function index(): View
     {
-        $subcategories = Subcategory::with('category')
-            ->withCount('products')
-            ->latest()
-            ->paginate(15);
+        try {
+            $subcategories = Subcategory::with('category')
+                ->withCount('products')
+                ->latest()
+                ->paginate(15);
 
-        $categories = Category::where('is_active', true)->orderBy('name')->get(['id', 'name']);
+            $categories = Category::where('is_active', true)->orderBy('name')->get(['id', 'name']);
 
-        return view('admin.subcategories.index', compact('subcategories', 'categories'));
+            return view('admin.subcategories.index', compact('subcategories', 'categories'));
+        } catch (Throwable $e) {
+            Log::error('Error loading subcategories list: '.$e->getMessage(), ['exception' => $e]);
+
+            return view('admin.subcategories.index', [
+                'subcategories' => Subcategory::whereRaw('1 = 0')->paginate(15),
+                'categories' => collect(),
+            ])->with('error', 'Unable to retrieve subcategories at this moment.');
+        }
     }
 
     /**
@@ -33,11 +45,22 @@ class SubcategoryController extends Controller
     public function store(SubcategoryRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        $validated['slug'] = Subcategory::generateUniqueSlug($validated['name']);
 
-        Subcategory::create($validated);
+        try {
+            DB::transaction(function () use ($validated) {
+                $validated['slug'] = Subcategory::generateUniqueSlug($validated['name']);
+                Subcategory::create($validated);
+            });
 
-        return redirect()->route('admin.subcategories.index')->with('success', 'Subcategory created successfully!');
+            return redirect()->route('admin.subcategories.index')->with('success', 'Subcategory created successfully!');
+        } catch (Throwable $e) {
+            Log::error('Failed to create subcategory: '.$e->getMessage(), [
+                'request' => $request->except(['_token']),
+                'exception' => $e,
+            ]);
+
+            return back()->withInput()->with('error', 'Failed to create subcategory. Please try again.');
+        }
     }
 
     /**
@@ -47,13 +70,24 @@ class SubcategoryController extends Controller
     {
         $validated = $request->validated();
 
-        if ($subcategory->name !== $validated['name']) {
-            $validated['slug'] = Subcategory::generateUniqueSlug($validated['name'], $subcategory->id);
+        try {
+            DB::transaction(function () use ($subcategory, $validated) {
+                if ($subcategory->name !== $validated['name']) {
+                    $validated['slug'] = Subcategory::generateUniqueSlug($validated['name'], $subcategory->id);
+                }
+
+                $subcategory->update($validated);
+            });
+
+            return redirect()->route('admin.subcategories.index')->with('success', 'Subcategory updated successfully!');
+        } catch (Throwable $e) {
+            Log::error('Failed to update subcategory #'.$subcategory->id.': '.$e->getMessage(), [
+                'request' => $request->except(['_token']),
+                'exception' => $e,
+            ]);
+
+            return back()->withInput()->with('error', 'Failed to update subcategory. Please try again.');
         }
-
-        $subcategory->update($validated);
-
-        return redirect()->route('admin.subcategories.index')->with('success', 'Subcategory updated successfully!');
     }
 
     /**
@@ -61,9 +95,17 @@ class SubcategoryController extends Controller
      */
     public function destroy(Subcategory $subcategory): RedirectResponse
     {
-        $subcategory->delete();
+        try {
+            DB::transaction(function () use ($subcategory) {
+                $subcategory->delete();
+            });
 
-        return redirect()->route('admin.subcategories.index')->with('success', 'Subcategory deleted successfully!');
+            return redirect()->route('admin.subcategories.index')->with('success', 'Subcategory deleted successfully!');
+        } catch (Throwable $e) {
+            Log::error('Failed to delete subcategory #'.$subcategory->id.': '.$e->getMessage(), ['exception' => $e]);
+
+            return back()->with('error', 'Failed to delete subcategory. Ensure there are no dependent records blocking this action.');
+        }
     }
 
     /**
@@ -71,11 +113,19 @@ class SubcategoryController extends Controller
      */
     public function byCategory(int $categoryId): JsonResponse
     {
-        $subcategories = Subcategory::where('category_id', $categoryId)
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get(['id', 'name', 'slug']);
+        try {
+            $subcategories = Subcategory::where('category_id', $categoryId)
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get(['id', 'name', 'slug']);
 
-        return response()->json($subcategories);
+            return response()->json($subcategories);
+        } catch (Throwable $e) {
+            Log::error('Failed to fetch subcategories for category #'.$categoryId.': '.$e->getMessage());
+
+            return response()->json([
+                'error' => 'Unable to load subcategories for the selected category.',
+            ], 500);
+        }
     }
 }
