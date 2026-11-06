@@ -2,7 +2,7 @@
 -- E-commerce Platform Database Export
 -- Candidate: Md Naimul Hasan Naeem
 -- Bangla Puzzle Limited - Mid-Level Laravel Developer Assignment
--- Generated: 2026-11-06 16:45:21
+-- Generated: 2026-11-06 16:57:35
 -- ============================================================
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -32,7 +32,7 @@ CREATE TABLE `users` (
 
 -- Dumping data for table `users`
 INSERT INTO `users` (`id`, `name`, `email`, `avatar`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`) VALUES ('1', 'Naimul Hasan', 'naimulhasan312005@gmail.com', NULL, '2026-11-06 13:12:24', '$2y$12$Sj.QOJOo7VcFFvjW5xCuX.GNUKrq1HwW9UhG31Hx1/DNr8qs5Mp/S', NULL, NULL, NULL, NULL, '2026-11-06 13:11:32', '2026-11-06 13:12:24');
-INSERT INTO `users` (`id`, `name`, `email`, `avatar`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`) VALUES ('2', 'Md Naimul Hasan Naeem', 'admin@banglapuzzle.com', NULL, '2026-11-06 13:12:23', '$2y$12$3W6IQmO0x9s9kqU.WXXy2uy3kWMJuixjib5KZQvBcgAJB/8BevglO', NULL, NULL, NULL, 'CmbQBwHZI65o1wL1YG22QmNyOA5qUmw84CvLwzhJk1gUb467kiLBgAu7kOeL', '2026-11-06 13:12:23', '2026-11-06 13:12:23');
+INSERT INTO `users` (`id`, `name`, `email`, `avatar`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`) VALUES ('2', 'Md Naimul Hasan Naeem', 'admin@banglapuzzle.com', NULL, '2026-11-06 13:12:23', '$2y$12$3W6IQmO0x9s9kqU.WXXy2uy3kWMJuixjib5KZQvBcgAJB/8BevglO', NULL, NULL, NULL, 'gEoz3x34t6XxCdHH9uwOxPrZENPvfawD8zl4LoYKG471DJ3UQdD7KRfaPYj1', '2026-11-06 13:12:23', '2026-11-06 13:12:23');
 
 -- ------------------------------------------------------------
 -- Table structure for `categories`

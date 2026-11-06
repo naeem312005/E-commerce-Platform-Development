@@ -36,8 +36,6 @@
     <!-- Scripts Partial: SweetAlert2 Toast, Status Toggle, Flash Listeners -->
     @include('backend.partials.scripts')
 
-    <!-- CKEditor Partial -->
-    @include('backend.partials.ckeditor')
 
     <!-- Page Specific Scripts -->
     @stack('scripts')
