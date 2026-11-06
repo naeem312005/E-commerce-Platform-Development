@@ -180,3 +180,4 @@
     @stack('scripts')
 </body>
 </html>
+

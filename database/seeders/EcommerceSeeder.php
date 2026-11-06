@@ -229,3 +229,4 @@ class EcommerceSeeder extends Seeder
         }
     }
 }
+
