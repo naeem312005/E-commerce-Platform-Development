@@ -42,7 +42,7 @@ class ExportDatabaseCommand extends Command
         $sql .= "-- E-commerce Platform Database Export\n";
         $sql .= "-- Candidate: Md Naimul Hasan Naeem\n";
         $sql .= "-- Bangla Puzzle Limited - Mid-Level Laravel Developer Assignment\n";
-        $sql .= "-- Generated: " . date('Y-m-d H:i:s') . "\n";
+        $sql .= '-- Generated: '.date('Y-m-d H:i:s')."\n";
         $sql .= "-- ============================================================\n\n";
         $sql .= "SET FOREIGN_KEY_CHECKS = 0;\n";
         $sql .= "SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';\n";
@@ -59,7 +59,7 @@ class ExportDatabaseCommand extends Command
 
             // Create table
             $createTable = DB::select("SHOW CREATE TABLE `{$table}`");
-            $sql .= $createTable[0]->{'Create Table'} . ";\n\n";
+            $sql .= $createTable[0]->{'Create Table'}.";\n\n";
 
             // Table rows
             $rows = DB::table($table)->get();
@@ -67,13 +67,16 @@ class ExportDatabaseCommand extends Command
                 $sql .= "-- Dumping data for table `{$table}`\n";
                 foreach ($rows as $row) {
                     $rowArray = (array) $row;
-                    $columns = array_map(fn($col) => "`{$col}`", array_keys($rowArray));
+                    $columns = array_map(fn ($col) => "`{$col}`", array_keys($rowArray));
                     $values = array_map(function ($val) {
-                        if (is_null($val)) return 'NULL';
-                        return "'" . addslashes((string) $val) . "'";
+                        if (is_null($val)) {
+                            return 'NULL';
+                        }
+
+                        return "'".addslashes((string) $val)."'";
                     }, array_values($rowArray));
 
-                    $sql .= "INSERT INTO `{$table}` (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ");\n";
+                    $sql .= "INSERT INTO `{$table}` (".implode(', ', $columns).') VALUES ('.implode(', ', $values).");\n";
                 }
                 $sql .= "\n";
             }
@@ -82,7 +85,7 @@ class ExportDatabaseCommand extends Command
         $sql .= "SET FOREIGN_KEY_CHECKS = 1;\n";
 
         File::put($filePath, $sql);
-        File::put(base_path('database/' . $filename), $sql);
+        File::put(base_path('database/'.$filename), $sql);
 
         $this->info("Database exported successfully to: {$filePath}");
         $this->info("Secondary copy created at: database/{$filename}");

@@ -6,23 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of categories.
      */
-    public function index(): Response
+    public function index(): View
     {
         $categories = Category::withCount(['subcategories', 'products'])
             ->latest()
             ->paginate(15);
 
-        return Inertia::render('admin/categories/Index', [
-            'categories' => $categories,
-        ]);
+        return view('admin.categories.index', compact('categories'));
     }
 
     /**

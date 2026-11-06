@@ -11,7 +11,7 @@
 
 ## 📋 Project Overview & Architecture
 
-This application is a robust, simplified e-commerce management platform built with modern **Laravel 13**, **Vue 3 + Inertia.js**, and **Tailwind CSS**. It provides full CRUD operations for Categories, Subcategories, and Products, enforcing relational data integrity, clean architecture, and SEO-friendly slugged URLs.
+This application is a robust, simplified e-commerce management platform built with modern **Laravel 13**, **Blade Template Engine**, and **Tailwind CSS**. It provides full CRUD operations for Categories, Subcategories, and Products, enforcing relational data integrity, clean architecture, and SEO-friendly slugged URLs.
 
 ### 🌟 Implemented Requirements Matrix
 

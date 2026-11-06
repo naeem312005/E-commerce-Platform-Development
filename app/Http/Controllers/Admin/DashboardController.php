@@ -6,15 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Subcategory;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
     /**
      * Display the admin overview dashboard with system metrics.
      */
-    public function index(): Response
+    public function index(): View
     {
         $stats = [
             'total_categories' => Category::count(),
@@ -33,10 +32,6 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        return Inertia::render('Dashboard', [
-            'stats' => $stats,
-            'recentProducts' => $recentProducts,
-            'categories' => $categories,
-        ]);
+        return view('dashboard', compact('stats', 'recentProducts', 'categories'));
     }
 }

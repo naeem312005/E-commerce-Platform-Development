@@ -10,15 +10,14 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\View\View;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of products.
      */
-    public function index(Request $request): Response
+    public function index(Request $request): View
     {
         $query = Product::with(['category:id,name,slug', 'subcategory:id,name,slug']);
 
@@ -48,21 +47,19 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get(['id', 'name']);
 
-        return Inertia::render('admin/products/Index', [
-            'products' => $products,
-            'categories' => $categories,
-            'filters' => [
-                'search' => $request->input('search', ''),
-                'category_id' => $request->input('category_id', ''),
-                'subcategory_id' => $request->input('subcategory_id', ''),
-            ],
-        ]);
+        $filters = [
+            'search' => $request->input('search', ''),
+            'category_id' => $request->input('category_id', ''),
+            'subcategory_id' => $request->input('subcategory_id', ''),
+        ];
+
+        return view('admin.products.index', compact('products', 'categories', 'filters'));
     }
 
     /**
      * Show the form for creating a new product.
      */
-    public function create(): Response
+    public function create(): View
     {
         $categories = Category::with(['subcategories' => function ($q) {
             $q->where('is_active', true)->orderBy('name');
@@ -71,10 +68,7 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get(['id', 'name']);
 
-        return Inertia::render('admin/products/Form', [
-            'categories' => $categories,
-            'product' => null,
-        ]);
+        return view('admin.products.create', compact('categories'));
     }
 
     /**
@@ -100,7 +94,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified product.
      */
-    public function edit(Product $product): Response
+    public function edit(Product $product): View
     {
         $product->load(['category:id,name', 'subcategory:id,name']);
 
@@ -111,10 +105,7 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get(['id', 'name']);
 
-        return Inertia::render('admin/products/Form', [
-            'categories' => $categories,
-            'product' => $product,
-        ]);
+        return view('admin.products.edit', compact('categories', 'product'));
     }
 
     /**

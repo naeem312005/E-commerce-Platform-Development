@@ -8,15 +8,14 @@ use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\View\View;
 
 class SubcategoryController extends Controller
 {
     /**
      * Display a listing of subcategories.
      */
-    public function index(): Response
+    public function index(): View
     {
         $subcategories = Subcategory::with('category')
             ->withCount('products')
@@ -25,10 +24,7 @@ class SubcategoryController extends Controller
 
         $categories = Category::where('is_active', true)->orderBy('name')->get(['id', 'name']);
 
-        return Inertia::render('admin/subcategories/Index', [
-            'subcategories' => $subcategories,
-            'categories' => $categories,
-        ]);
+        return view('admin.subcategories.index', compact('subcategories', 'categories'));
     }
 
     /**

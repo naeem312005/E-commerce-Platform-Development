@@ -6,15 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\View\View;
 
 class CatalogController extends Controller
 {
     /**
      * Display all products organized by their respective subcategories.
      */
-    public function index(Request $request): Response
+    public function index(Request $request): View
     {
         $categories = Category::where('is_active', true)
             ->with(['subcategories' => function ($query) {
@@ -28,16 +27,15 @@ class CatalogController extends Controller
             ->orderBy('name')
             ->get();
 
-        return Inertia::render('admin/catalog/Index', [
-            'categories' => $categories,
-            'totalProducts' => Product::where('is_active', true)->count(),
-        ]);
+        $totalProducts = Product::where('is_active', true)->count();
+
+        return view('catalog.index', compact('categories', 'totalProducts'));
     }
 
     /**
      * Display the specified product with SEO-friendly slug.
      */
-    public function show(string $slug): Response
+    public function show(string $slug): View
     {
         $product = Product::where('slug', $slug)
             ->with(['category:id,name,slug', 'subcategory:id,name,slug'])
@@ -50,9 +48,6 @@ class CatalogController extends Controller
             ->take(4)
             ->get();
 
-        return Inertia::render('admin/catalog/Show', [
-            'product' => $product,
-            'relatedProducts' => $relatedProducts,
-        ]);
+        return view('catalog.show', compact('product', 'relatedProducts'));
     }
 }
