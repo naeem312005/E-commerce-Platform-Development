@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('backend.app')
 
 @section('title', 'Edit Product')
 @section('header_title', 'Edit Product')

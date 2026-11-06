@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('backend.app')
 
 @section('title', 'Admin Dashboard')
 @section('header_title', 'Overview Dashboard')

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('backend.app')
 
 @section('title', 'Admin Profile Settings')
 @section('header_title', 'Admin Profile Settings')
@@ -248,3 +248,4 @@
 </script>
 @endpush
 @endsection
+

@@ -35,7 +35,7 @@ class DashboardController extends Controller
                 ->take(5)
                 ->get();
 
-            return view('dashboard', compact('stats', 'recentProducts', 'categories'));
+            return view('backend.dashboard', compact('stats', 'recentProducts', 'categories'));
         } catch (Throwable $e) {
             Log::error('Error loading dashboard metrics: '.$e->getMessage(), ['exception' => $e]);
 
@@ -46,7 +46,7 @@ class DashboardController extends Controller
                 'active_products' => 0,
             ];
 
-            return view('dashboard', [
+            return view('backend.dashboard', [
                 'stats' => $stats,
                 'recentProducts' => collect(),
                 'categories' => collect(),
