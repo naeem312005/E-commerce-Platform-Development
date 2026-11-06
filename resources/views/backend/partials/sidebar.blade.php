@@ -1,7 +1,8 @@
-<aside id="sidebar" class="w-full lg:w-64 bg-slate-900 text-white shrink-0 flex flex-col justify-between border-r border-slate-800 shadow-xl transition-all duration-300 lg:static fixed inset-y-0 left-0 z-40 transform -translate-x-full lg:translate-x-0">
-    <div>
+<aside id="sidebar" class="w-72 max-w-[85vw] lg:w-64 bg-slate-900 text-white shrink-0 flex flex-col justify-between border-r border-slate-800 shadow-xl transition-transform duration-300 ease-in-out fixed inset-y-0 left-0 z-40 transform -translate-x-full lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 lg:z-30">
+    <!-- Top Section: Brand Header & Navigation Menu -->
+    <div class="flex flex-col flex-1 min-h-0">
         <!-- Brand Header -->
-        <div class="h-16 flex items-center justify-between px-6 border-b border-slate-800/80 bg-slate-950/40">
+        <div class="h-16 shrink-0 flex items-center justify-between px-6 border-b border-slate-800/80 bg-slate-950/40">
             <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
                 <div class="size-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-400 flex items-center justify-center text-white font-black text-lg shadow-md shadow-indigo-500/25 group-hover:scale-105 transition-transform">
                     BP
@@ -19,8 +20,8 @@
             </button>
         </div>
 
-        <!-- Navigation Menu -->
-        <nav class="p-4 space-y-1.5">
+        <!-- Scrollable Navigation Menu -->
+        <nav class="flex-1 overflow-y-auto p-4 space-y-1.5" style="scrollbar-width: thin;">
             <div class="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 Main Menu
             </div>
@@ -94,9 +95,9 @@
         </nav>
     </div>
 
-    <!-- Bottom User Card -->
-    <div class="p-4 border-t border-slate-800/80 bg-slate-950/30">
-        <div class="flex items-center justify-between">
+    <!-- Bottom User Card (Always pinned at bottom) -->
+    <div class="p-4 shrink-0 border-t border-slate-800/80 bg-slate-950/50">
+        <div class="flex items-center justify-between gap-2">
             <a href="{{ route('admin.profile.index') }}" class="flex items-center gap-3 min-w-0 group hover:opacity-90 transition">
                 <img src="{{ auth()->user()?->avatar_url ?? 'https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff' }}" alt="{{ auth()->user()?->name ?? 'Admin' }}" class="size-10 rounded-full object-cover border-2 border-slate-700 shadow-sm shrink-0">
                 <div class="min-w-0">
@@ -115,4 +116,3 @@
         </div>
     </div>
 </aside>
-

@@ -116,7 +116,7 @@
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200/80 py-6 text-center text-xs text-slate-500">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>© {{ date('Y') }} Bangla Puzzle Store</p>
+            <p>© {{ date('Y') }} Bangla Puzzle Store. All rights reserved.</p>
         </div>
     </footer>
 
